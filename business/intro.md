@@ -11,5 +11,38 @@ kernelspec:
   language: python
   name: python3
 ---
-# Bussines Understanding 
-Bussines Understanding adalah
+# Business Understanding
+
+## Udara yang Kita Hirup, Data yang Kita Butuhkan
+
+Setiap hari, tanpa disadari, warga Jombang menghirup udara yang komposisinya terus berubah — dipengaruhi asap kendaraan, aktivitas industri, hingga pembakaran bahan bakar fosil. Sayangnya, perubahan ini nyaris tidak terlihat oleh mata. Diperlukan data untuk mengungkapnya.
+ ![Jombang](../img/geojson.png)
+
+## Kenapa Proyek Ini Penting?
+
+Nitrogen Dioksida (NO2), Karbon Monoksida (CO), dan Sulfur Dioksida (SO2) adalah tiga polutan udara yang erat kaitannya dengan aktivitas manusia sehari-hari:
+
+- **NO2** banyak dihasilkan dari pembakaran bahan bakar kendaraan bermotor dan industri. Paparan jangka panjang dapat mengiritasi saluran pernapasan dan memperburuk kondisi asma.
+- **CO** adalah gas tidak berwarna dan tidak berbau yang dihasilkan dari pembakaran tidak sempurna, misalnya dari kendaraan, generator, atau pembakaran sampah. Dalam konsentrasi tinggi, CO berbahaya karena mengikat hemoglobin darah dan menghambat distribusi oksigen ke tubuh.
+- **SO2** umumnya berasal dari pembakaran bahan bakar fosil yang mengandung belerang, seperti batu bara dan minyak bumi, serta aktivitas industri dan pembangkit listrik. Gas ini dapat mengiritasi sistem pernapasan, memicu hujan asam, dan berdampak buruk pada tanaman serta bangunan.
+
+Masalahnya, kedua polutan ini tidak bisa dilihat langsung dengan mata telanjang. Tanpa data, sulit untuk mengetahui apakah udara di suatu wilayah membaik atau justru memburuk dari waktu ke waktu.
+
+Di sinilah data satelit berperan. Melalui Sentinel-5P, kondisi udara di suatu wilayah — termasuk Jombang — bisa dipantau dari luar angkasa, tanpa perlu memasang alat sensor fisik di lapangan. Data ini terbuka, gratis, dan diperbarui secara berkala, menjadikannya sumber yang sangat potensial untuk pemantauan kualitas udara berkelanjutan.
+
+## Tujuan Proyek
+
+Proyek ini bertujuan untuk **memahami kondisi kualitas udara di wilayah Jombang** melalui data historis konsentrasi NO2, CO, dan SO2 dalam rentang waktu minimal satu tahun terakhir hingga 31 Agustus 2026. Data yang terkumpul akan diolah dan divisualisasikan dalam bentuk grafik time series, sehingga pola naik-turunnya polusi udara dari hari ke hari, musim ke musim, bisa terlihat dengan jelas.
+
+## Manfaat yang Diharapkan
+
+| Untuk Siapa | Manfaatnya Apa |
+|---|---|
+| 🏠 **Masyarakat** | Mendapat gambaran nyata kualitas udara di sekitar tempat tinggal, sehingga bisa lebih waspada, misalnya menghindari aktivitas luar ruangan saat polusi sedang tinggi. |
+| 🏛️ **Pemerintah Daerah** | Memiliki data pendukung untuk kebijakan pengendalian pencemaran udara, tata ruang kota, hingga pengaturan lalu lintas dan kawasan industri. |
+| 🔬 **Akademisi & Peneliti** | Membuka peluang riset lanjutan tentang hubungan aktivitas manusia dengan tingkat polusi, serta menjadi dasar untuk pengembangan sistem pemantauan udara yang lebih canggih. |
+| 💻 **Praktisi Data** | Menjadi studi kasus nyata proses *data understanding* — mulai dari pengambilan data, eksplorasi, hingga menemukan pola dan anomali dari data lingkungan berbasis satelit. |
+
+## Intinya
+
+Proyek ini bukan sekadar tugas kuliah — ini adalah usaha kecil untuk menjawab pertanyaan besar: **seberapa sehat udara yang kita hirup setiap hari?** Dengan data, jawaban itu tidak lagi berupa dugaan, melainkan fakta yang bisa dilihat, dianalisis, dan digunakan untuk membuat keputusan yang lebih baik.

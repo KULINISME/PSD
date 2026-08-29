@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data Understanding &#8212; Proyek Sains Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'data_understanding/intro';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Markdown Files" href="../markdown.html" />
+    <link rel="prev" title="Business Understanding" href="../business/intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Proyek Sains Data - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Proyek Sains Data - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to My Project Science Data
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../business/intro.html">Business Understanding</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../markdown.html">Markdown Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fdata_understanding/intro.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/data_understanding/intro.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Data Understanding</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengenal-data-sebelum-bicara-kesimpulan">Mengenal Data Sebelum Bicara Kesimpulan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sumber-data">1. Sumber Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-no2-co-dan-so2">2. Apa Itu NO2, CO, dan SO2?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no2-nitrogen-dioksida">🟤 NO2 — Nitrogen Dioksida</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#co-karbon-monoksida">⚫ CO — Karbon Monoksida</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#so2-sulfur-dioksida">🟡 SO2 — Sulfur Dioksida</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-kadar-polusi-udara-di-daerah-jombang">Prediksi Kadar Polusi Udara di Daerah Jombang</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pendahuluan">1. Pendahuluan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengambilan-data">2. Pengambilan Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#koneksi-ke-openeo">2.1 Koneksi ke OpenEO</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definisi-area-of-interest-aoi">2.2 Definisi Area of Interest (AOI)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-sentinel-5p">2.3 Load Data Sentinel-5P</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-sentinel-5p-no2">2.3.1 Load Data Sentinel-5P NO2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-sentinel-5p-co">2.3.2 Load Data Sentinel-5P CO</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-sentinel-5p-so2">2.3.3 Load Data Sentinel-5P SO2</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agregasi-temporal-dan-spasial">2.4 Agregasi Temporal dan Spasial</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eksekusi-batch-job">2.5 Eksekusi Batch Job</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dokumentasi-visual-eksplorasi-awal-dan-deteksi-outlier">3. Dokumentasi Visual — Eksplorasi Awal dan Deteksi Outlier</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafik-time-series-mentah-excel">3.1 Grafik Time Series Mentah (Excel)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dengan-orange-data-mining">3.2 Deteksi Outlier dengan Orange Data Mining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting">3.3 Catatan Penting</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="data-understanding">
+<h1>Data Understanding<a class="headerlink" href="#data-understanding" title="Link to this heading">#</a></h1>
+<section id="mengenal-data-sebelum-bicara-kesimpulan">
+<h2>Mengenal Data Sebelum Bicara Kesimpulan<a class="headerlink" href="#mengenal-data-sebelum-bicara-kesimpulan" title="Link to this heading">#</a></h2>
+<p>Sebelum masuk ke analisis lebih jauh, penting untuk benar-benar mengenal data yang kita punya — dari mana asalnya, apa arti tiap kolomnya, dan apakah ada hal ganjil yang perlu diwaspadai. Bagian ini menjelaskan tiga polutan yang menjadi fokus proyek: <strong>NO2, CO, dan SO2</strong>, sekaligus mengeksplorasi data mentah yang berhasil dikumpulkan dari citra satelit Sentinel-5P untuk wilayah Jombang.</p>
+</section>
+<hr class="docutils" />
+<section id="sumber-data">
+<h2>1. Sumber Data<a class="headerlink" href="#sumber-data" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspek</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Sumber</p></td>
+<td><p>Satelit Sentinel-5P (program Copernicus)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Platform akses</p></td>
+<td><p>OpenEO (<code class="docutils literal notranslate"><span class="pre">openeo.dataspace.copernicus.eu</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Wilayah</p></td>
+<td><p>Jombang, Jawa Timur (dibatasi via GeoJSON bounding box)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rentang waktu</p></td>
+<td><p>2025-08-30 s.d. 2026-08-29 (± 1 tahun)</p></td>
+</tr>
+<tr class="row-even"><td><p>Resolusi spasial</p></td>
+<td><p>Grid 3×3 (9 titik pengamatan per hari, per polutan)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Format file mentah</p></td>
+<td><p>NetCDF (<code class="docutils literal notranslate"><span class="pre">.nc</span></code>) → dikonversi ke CSV</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="apa-itu-no2-co-dan-so2">
+<h2>2. Apa Itu NO2, CO, dan SO2?<a class="headerlink" href="#apa-itu-no2-co-dan-so2" title="Link to this heading">#</a></h2>
+<section id="no2-nitrogen-dioksida">
+<h3>🟤 NO2 — Nitrogen Dioksida<a class="headerlink" href="#no2-nitrogen-dioksida" title="Link to this heading">#</a></h3>
+<p>NO2 adalah gas hasil pembakaran bahan bakar fosil pada suhu tinggi, paling banyak dihasilkan dari <strong>kendaraan bermotor, pembangkit listrik, dan aktivitas industri</strong>. Gas ini menjadi salah satu indikator utama polusi udara perkotaan karena erat kaitannya dengan volume lalu lintas.</p>
+<p><strong>Dampak:</strong> Mengiritasi saluran pernapasan, memperburuk asma, dan berkontribusi pada pembentukan ozon permukaan serta hujan asam.</p>
+</section>
+<section id="co-karbon-monoksida">
+<h3>⚫ CO — Karbon Monoksida<a class="headerlink" href="#co-karbon-monoksida" title="Link to this heading">#</a></h3>
+<p>CO adalah gas tidak berwarna dan tidak berbau, dihasilkan dari <strong>pembakaran tidak sempurna</strong> — misalnya knalpot kendaraan, generator, pembakaran sampah, atau kebakaran hutan.</p>
+<p><strong>Dampak:</strong> Mengikat hemoglobin dalam darah menggantikan oksigen, sehingga dalam konsentrasi tinggi bisa menyebabkan sesak napas, pusing, bahkan keracunan akut.</p>
+</section>
+<section id="so2-sulfur-dioksida">
+<h3>🟡 SO2 — Sulfur Dioksida<a class="headerlink" href="#so2-sulfur-dioksida" title="Link to this heading">#</a></h3>
+<p>SO2 dihasilkan dari pembakaran bahan bakar yang mengandung belerang, seperti <strong>batu bara dan minyak bumi</strong>, umumnya dari pembangkit listrik tenaga fosil dan kawasan industri berat.</p>
+<p><strong>Dampak:</strong> Mengiritasi sistem pernapasan, memicu hujan asam, serta merusak vegetasi dan material bangunan dalam jangka panjang.</p>
+</section>
+</section>
+<section id="prediksi-kadar-polusi-udara-di-daerah-jombang">
+<h2>Prediksi Kadar Polusi Udara di Daerah Jombang<a class="headerlink" href="#prediksi-kadar-polusi-udara-di-daerah-jombang" title="Link to this heading">#</a></h2>
+</section>
+<section id="pendahuluan">
+<h2>1. Pendahuluan<a class="headerlink" href="#pendahuluan" title="Link to this heading">#</a></h2>
+<p>Notebook ini mendokumentasikan pipeline lengkap untuk pengambilan data, preprocessing, dan pemodelan prediksi kadar Nitrogen Dioksida (NO2),Karbon Monoksida (CO), dan Sulfur Dioksida (SO2) di wilayah Jombang . Data diperoleh dari Sentinel-5P melalui platform OpenEO.</p>
+</section>
+<hr class="docutils" />
+<section id="pengambilan-data">
+<h2>2. Pengambilan Data<a class="headerlink" href="#pengambilan-data" title="Link to this heading">#</a></h2>
+<section id="koneksi-ke-openeo">
+<h3>2.1 Koneksi ke OpenEO<a class="headerlink" href="#koneksi-ke-openeo" title="Link to this heading">#</a></h3>
+<p>Koneksi ke server OpenEO dilakukan menggunakan library <code class="docutils literal notranslate"><span class="pre">openeo</span></code> dengan autentikasi OIDC.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">openeo</span>
+<span class="n">connection</span> <span class="o">=</span> <span class="n">openeo</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;openeo.dataspace.copernicus.eu&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">authenticate_oidc</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="definisi-area-of-interest-aoi">
+<h3>2.2 Definisi Area of Interest (AOI)<a class="headerlink" href="#definisi-area-of-interest-aoi" title="Link to this heading">#</a></h3>
+<p>Area penelitian didefinisikan menggunakan polygon GeoJSON yang mencakup wilayah Jombang, Jawa Timur.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Nilai</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Batas Barat (West)</p></td>
+<td><p>112.17337695661712</p></td>
+</tr>
+<tr class="row-odd"><td><p>Batas Selatan (South)</p></td>
+<td><p>-7.608680889617773</p></td>
+</tr>
+<tr class="row-even"><td><p>Batas Timur (East)</p></td>
+<td><p>112.29947621158374</p></td>
+</tr>
+<tr class="row-odd"><td><p>Batas Utara (North)</p></td>
+<td><p>-7.515673004000362</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="load-data-sentinel-5p">
+<h3>2.3 Load Data Sentinel-5P<a class="headerlink" href="#load-data-sentinel-5p" title="Link to this heading">#</a></h3>
+<section id="load-data-sentinel-5p-no2">
+<h4>2.3.1 Load Data Sentinel-5P NO2<a class="headerlink" href="#load-data-sentinel-5p-no2" title="Link to this heading">#</a></h4>
+<p>Data NO2 dari koleksi <code class="docutils literal notranslate"><span class="pre">SENTINEL_5P_L2</span></code> diambil untuk rentang waktu 2025-8-30 hingga 2026-8-30 dengan band NO2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">s5post</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span>
+    <span class="s2">&quot;SENTINEL_5P_L2&quot;</span><span class="p">,</span>
+    <span class="n">temporal_extent</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;2025-8-30&quot;</span><span class="p">,</span> <span class="s2">&quot;2026-8-30&quot;</span><span class="p">],</span>
+    <span class="n">spatial_extent</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;west&quot;</span><span class="p">:</span> <span class="mf">112.17337695661712</span><span class="p">,</span>
+        <span class="s2">&quot;south&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.608680889617773</span><span class="p">,</span>
+        <span class="s2">&quot;east&quot;</span><span class="p">:</span> <span class="mf">112.29947621158374</span><span class="p">,</span>
+        <span class="s2">&quot;north&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.515673004000362</span>
+    <span class="p">},</span>
+    <span class="n">bands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;NO2&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-data-sentinel-5p-co">
+<h4>2.3.2 Load Data Sentinel-5P CO<a class="headerlink" href="#load-data-sentinel-5p-co" title="Link to this heading">#</a></h4>
+<p>Data CO dari koleksi <code class="docutils literal notranslate"><span class="pre">SENTINEL_5P_L2</span></code> diambil untuk rentang waktu 2025-8-30 hingga 2026-8-30 dengan band CO.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aoi</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">[</span>
+            <span class="p">[</span><span class="mf">112.19390412051746</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.50982809342085</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">112.31010499365027</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.50982809342085</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">112.31010499365027</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.596858714299557</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">112.19390412051746</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.596858714299557</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">112.19390412051746</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.50982809342085</span><span class="p">]</span>
+          <span class="p">]</span>
+        <span class="p">]</span>
+<span class="p">}</span>
+<span class="n">s5co</span>  <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span>
+    <span class="s2">&quot;SENTINEL_5P_L2&quot;</span><span class="p">,</span>
+    <span class="n">temporal_extent</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;2025-08-30&quot;</span><span class="p">,</span> <span class="s2">&quot;2026-08-30&quot;</span><span class="p">],</span>
+    <span class="n">spatial_extent</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;west&quot;</span><span class="p">:</span> <span class="mf">112.17337695661712</span><span class="p">,</span>
+        <span class="s2">&quot;south&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.608680889617773</span><span class="p">,</span>
+        <span class="s2">&quot;east&quot;</span><span class="p">:</span> <span class="mf">112.29947621158374</span><span class="p">,</span>
+        <span class="s2">&quot;north&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.515673004000362</span>
+    <span class="p">},</span>
+    <span class="n">bands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CO&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-data-sentinel-5p-so2">
+<h4>2.3.3 Load Data Sentinel-5P SO2<a class="headerlink" href="#load-data-sentinel-5p-so2" title="Link to this heading">#</a></h4>
+<p>Data SO2 dari koleksi <code class="docutils literal notranslate"><span class="pre">SENTINEL_5P_L2</span></code> diambil untuk rentang waktu 2025-8-30 hingga 2026-8-30 dengan band SO2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aoi</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">[</span>
+            <span class="p">[</span><span class="mf">112.19390412051746</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.50982809342085</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">112.31010499365027</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.50982809342085</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">112.31010499365027</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.596858714299557</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">112.19390412051746</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.596858714299557</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">112.19390412051746</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.50982809342085</span><span class="p">]</span>
+          <span class="p">]</span>
+        <span class="p">]</span>
+<span class="p">}</span>
+<span class="n">s5so2</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">load_collection</span><span class="p">(</span>
+    <span class="s2">&quot;SENTINEL_5P_L2&quot;</span><span class="p">,</span>
+    <span class="n">temporal_extent</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;2025-08-30&quot;</span><span class="p">,</span> <span class="s2">&quot;2026-08-30&quot;</span><span class="p">],</span>
+    <span class="n">spatial_extent</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;west&quot;</span><span class="p">:</span> <span class="mf">112.17337695661712</span><span class="p">,</span>
+        <span class="s2">&quot;south&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.608680889617773</span><span class="p">,</span>
+        <span class="s2">&quot;east&quot;</span><span class="p">:</span> <span class="mf">112.29947621158374</span><span class="p">,</span>
+        <span class="s2">&quot;north&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.515673004000362</span>
+    <span class="p">},</span>
+    <span class="n">bands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SO2&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="agregasi-temporal-dan-spasial">
+<h3>2.4 Agregasi Temporal dan Spasial<a class="headerlink" href="#agregasi-temporal-dan-spasial" title="Link to this heading">#</a></h3>
+<p>Data diagregasi secara temporal (harian) untuk menghindari duplikasi, kemudian diagregasi secara spasial menggunakan mean agar menghasilkan satu nilai per hari untuk seluruh area sama, Untuk agregasi temporal dan Spasial dariNO2, CO dan SO2 mempunyai proses yg sama namun cukup mencocokan variabelnya saja
+Untuk NO2</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Agregasi harian</span>
+<span class="n">s5p_no2_daily</span> <span class="o">=</span> <span class="n">s5no2</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span><span class="n">reducer</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="s2">&quot;day&quot;</span><span class="p">)</span>
+
+<span class="c1"># Agregasi spasial</span>
+<span class="n">s5p_no2_aoi</span> <span class="o">=</span> <span class="n">s5p_no2_daily</span><span class="o">.</span><span class="n">aggregate_spatial</span><span class="p">(</span><span class="n">reducer</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">geometries</span><span class="o">=</span><span class="n">aoi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Untuk CO</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Agregasi harian</span>
+<span class="n">s5p_co_daily</span> <span class="o">=</span> <span class="n">s5co</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span><span class="n">reducer</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="s2">&quot;day&quot;</span><span class="p">)</span>
+
+<span class="c1"># Agregasi spasial</span>
+<span class="n">s5p_co_aoi</span> <span class="o">=</span> <span class="n">s5p_co_daily</span><span class="o">.</span><span class="n">aggregate_spatial</span><span class="p">(</span><span class="n">reducer</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">geometries</span><span class="o">=</span><span class="n">aoi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Untuk CO</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Agregasi harian</span>
+<span class="n">s5p_so2_daily</span> <span class="o">=</span> <span class="n">s5so2</span><span class="o">.</span><span class="n">aggregate_temporal_period</span><span class="p">(</span><span class="n">reducer</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="s2">&quot;day&quot;</span><span class="p">)</span>
+
+<span class="c1"># Agregasi spasial</span>
+<span class="n">s5p_so2_aoi</span> <span class="o">=</span> <span class="n">s5p_20_daily</span><span class="o">.</span><span class="n">aggregate_spatial</span><span class="p">(</span><span class="n">reducer</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">geometries</span><span class="o">=</span><span class="n">aoi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="eksekusi-batch-job">
+<h3>2.5 Eksekusi Batch Job<a class="headerlink" href="#eksekusi-batch-job" title="Link to this heading">#</a></h3>
+<p>Job dieksekusi secara batch dan hasilnya disimpan dalam format NetCDF.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">job</span> <span class="o">=</span> <span class="n">s5post</span><span class="o">.</span><span class="n">execute_batch</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;NO2 in Jombang&quot;</span><span class="p">,</span> <span class="n">outputfile</span><span class="o">=</span><span class="s2">&quot;NO2Jombang.nc&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="dokumentasi-visual-eksplorasi-awal-dan-deteksi-outlier">
+<h2>3. Dokumentasi Visual — Eksplorasi Awal dan Deteksi Outlier<a class="headerlink" href="#dokumentasi-visual-eksplorasi-awal-dan-deteksi-outlier" title="Link to this heading">#</a></h2>
+<p>Sebelum masuk ke tahap preprocessing yang lebih rapi, dilakukan eksplorasi visual awal menggunakan Excel (untuk melihat pola time series mentah) dan Orange Data Mining (untuk deteksi outlier antar polutan).</p>
+<section id="grafik-time-series-mentah-excel">
+<h3>3.1 Grafik Time Series Mentah (Excel)<a class="headerlink" href="#grafik-time-series-mentah-excel" title="Link to this heading">#</a></h3>
+<p><strong>NO2 dan CO — Grafik Batang per Titik Grid</strong></p>
+<p><img alt="Grafik CO Excel" src="../_images/gco.png" />
+<img alt="Grafik NO2 Excel" src="../_images/gno2.png" /></p>
+<p>Grafik di atas menampilkan visualisasi awal konsentrasi CO dan NO2 dari seluruh titik grid (9 titik per hari) menggunakan Excel. Karena data ditampilkan per titik grid tanpa agregasi, pola yang muncul masih berupa kumpulan batang yang saling bertumpuk (untuk CO) atau berdampingan (untuk NO2), sehingga tren keseluruhan kualitas udara belum terlihat jelas dan perlu diproses lebih lanjut dengan menghitung rata-rata harian.</p>
+<p><strong>SO2 — Grafik Area Bertumpuk</strong></p>
+<p><img alt="Grafik SO2 Excel" src="../_images/gso2.png" /></p>
+<p>Grafik SO2 menunjukkan pola fluktuasi yang tidak stabil, ditandai dengan munculnya nilai negatif pada sumbu Y — sesuatu yang secara fisik tidak mungkin terjadi pada konsentrasi gas sebenarnya. Hal ini mengindikasikan adanya noise atau outlier pada data mentah SO2 yang perlu ditangani lebih lanjut sebelum data dapat dianalisis secara akurat.</p>
+</section>
+<section id="deteksi-outlier-dengan-orange-data-mining">
+<h3>3.2 Deteksi Outlier dengan Orange Data Mining<a class="headerlink" href="#deteksi-outlier-dengan-orange-data-mining" title="Link to this heading">#</a></h3>
+<p><strong>NO2</strong></p>
+<p><img alt="Outlier NO2 Orange" src="../_images/no2.png" /></p>
+<p>Proses deteksi outlier pada data NO2 menghasilkan 329 data inlier (normal) dan 35 data outlier dari total 364 hari pengamatan, dengan persentase missing value sebesar 58.4% pada kelompok inlier. Outlier terdeteksi antara lain pada tanggal 30 Agustus 2025, yang menunjukkan nilai konsentrasi NO2 menyimpang signifikan dari pola umum data pada titik grid tersebut.</p>
+<p><strong>SO2</strong></p>
+<p><img alt="Outlier SO2 Orange" src="../_images/so2.png" /></p>
+<p>Hasil deteksi outlier pada data SO2 menunjukkan 331 data inlier dan 30 data outlier dari 361 baris data, dengan tingkat missing value sebesar 40.7% pada kelompok inlier. Menariknya, ditemukan nilai negatif pada beberapa titik grid (misalnya -0.000394646), yang mengindikasikan adanya noise atau kesalahan pengukuran pada citra satelit, mengingat secara fisik konsentrasi gas tidak mungkin bernilai negatif.</p>
+</section>
+<section id="catatan-penting">
+<h3>3.3 Catatan Penting<a class="headerlink" href="#catatan-penting" title="Link to this heading">#</a></h3>
+<p>Ditemukannya nilai negatif pada SO2 (baik di grafik Excel maupun hasil deteksi outlier Orange) merupakan temuan penting dalam tahap Data Understanding — ini menjadi sinyal bahwa <strong>preprocessing untuk SO2 memerlukan penanganan khusus</strong>, seperti pembersihan nilai negatif yang secara fisik tidak valid, sebelum data dapat digunakan untuk analisis tren maupun pemodelan lebih lanjut.</p>
+<hr class="docutils" />
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./data_understanding"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../business/intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Business Understanding</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../markdown.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Markdown Files</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengenal-data-sebelum-bicara-kesimpulan">Mengenal Data Sebelum Bicara Kesimpulan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sumber-data">1. Sumber Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-no2-co-dan-so2">2. Apa Itu NO2, CO, dan SO2?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no2-nitrogen-dioksida">🟤 NO2 — Nitrogen Dioksida</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#co-karbon-monoksida">⚫ CO — Karbon Monoksida</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#so2-sulfur-dioksida">🟡 SO2 — Sulfur Dioksida</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediksi-kadar-polusi-udara-di-daerah-jombang">Prediksi Kadar Polusi Udara di Daerah Jombang</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pendahuluan">1. Pendahuluan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengambilan-data">2. Pengambilan Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#koneksi-ke-openeo">2.1 Koneksi ke OpenEO</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definisi-area-of-interest-aoi">2.2 Definisi Area of Interest (AOI)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-sentinel-5p">2.3 Load Data Sentinel-5P</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-sentinel-5p-no2">2.3.1 Load Data Sentinel-5P NO2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-sentinel-5p-co">2.3.2 Load Data Sentinel-5P CO</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-sentinel-5p-so2">2.3.3 Load Data Sentinel-5P SO2</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agregasi-temporal-dan-spasial">2.4 Agregasi Temporal dan Spasial</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eksekusi-batch-job">2.5 Eksekusi Batch Job</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dokumentasi-visual-eksplorasi-awal-dan-deteksi-outlier">3. Dokumentasi Visual — Eksplorasi Awal dan Deteksi Outlier</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafik-time-series-mentah-excel">3.1 Grafik Time Series Mentah (Excel)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dengan-orange-data-mining">3.2 Deteksi Outlier dengan Orange Data Mining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting">3.3 Catatan Penting</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

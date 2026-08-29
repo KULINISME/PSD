@@ -5,7 +5,6 @@ format: jb-book
 root: intro
 chapters:
 - file: business/intro
-  sections:
-  - file: business/no2
+- file: data_understanding/intro
 - file: markdown
 - file: markdown-notebooks
