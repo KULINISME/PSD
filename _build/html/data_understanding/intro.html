@@ -404,8 +404,13 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dokumentasi-visual-eksplorasi-awal-dan-deteksi-outlier">3. Dokumentasi Visual — Eksplorasi Awal dan Deteksi Outlier</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafik-time-series-mentah-excel">3.1 Grafik Time Series Mentah (Excel)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dengan-orange-data-mining">3.2 Deteksi Outlier dengan Orange Data Mining</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting">3.3 Catatan Penting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafik-time-series-python">3.2 Grafik Time Series (Python)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-kode">3.2.1 Penjelasan Kode</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-visualisasi-dan-interpretasi">3.2.2 Hasil Visualisasi dan Interpretasi</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dengan-orange-data-mining">3.3 Deteksi Outlier dengan Orange Data Mining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting">3.4 Catatan Penting</a></li>
 </ul>
 </li>
 </ul>
@@ -677,8 +682,51 @@ Untuk NO2</p>
 <p><img alt="Grafik SO2 Excel" src="../_images/gso2.png" /></p>
 <p>Grafik SO2 menunjukkan pola fluktuasi yang tidak stabil, ditandai dengan munculnya nilai negatif pada sumbu Y — sesuatu yang secara fisik tidak mungkin terjadi pada konsentrasi gas sebenarnya. Hal ini mengindikasikan adanya noise atau outlier pada data mentah SO2 yang perlu ditangani lebih lanjut sebelum data dapat dianalisis secara akurat.</p>
 </section>
+<section id="grafik-time-series-python">
+<h3>3.2 Grafik Time Series (Python)<a class="headerlink" href="#grafik-time-series-python" title="Link to this heading">#</a></h3>
+<p>Untuk melihat tren kualitas udara secara lebih jelas dan akurat dibanding grafik Excel sebelumnya, data mentah tiap polutan (grid 3×3) diolah menggunakan Python: dihitung rata-rata hariannya, lalu divisualisasikan sebagai grafik time series menggunakan library <code class="docutils literal notranslate"><span class="pre">pandas</span></code> dan <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>.</p>
+<section id="penjelasan-kode">
+<h4>3.2.1 Penjelasan Kode<a class="headerlink" href="#penjelasan-kode" title="Link to this heading">#</a></h4>
+<p><strong>Membaca data dan menghitung rata-rata harian</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">hitung_rata_rata_harian</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
+    <span class="n">grid_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">grid_cols</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">hasil</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hasil</span>
+</pre></div>
+</div>
+<p>Fungsi ini membaca file CSV mentah (misalnya <code class="docutils literal notranslate"><span class="pre">NO2_Jombang_raw.csv</span></code>), lalu mengambil seluruh kolom grid (<code class="docutils literal notranslate"><span class="pre">NO2_r0_c0</span></code> sampai <code class="docutils literal notranslate"><span class="pre">NO2_r2_c2</span></code>) dan menghitung rata-ratanya untuk tiap baris (tiap hari). Parameter <code class="docutils literal notranslate"><span class="pre">skipna=True</span></code> memastikan nilai yang hilang (NaN) <strong>diabaikan saat menghitung rata-rata</strong>, bukan dianggap nol — sehingga hasil rata-ratanya tetap representatif meski ada data yang tidak lengkap. Data juga diurutkan berdasarkan tanggal (<code class="docutils literal notranslate"><span class="pre">sort_values('date')</span></code>) agar grafik time series berjalan kronologis.</p>
+<p><strong>Membuat grafik time series</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">no2_daily</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">],</span> <span class="n">no2_daily</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Rata-rata Harian NO2 — Jombang&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Tanggal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;NO2 (mol/m²)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;grafik_NO2.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Kode ini memplot nilai rata-rata harian (<code class="docutils literal notranslate"><span class="pre">mean</span></code>) terhadap tanggal (<code class="docutils literal notranslate"><span class="pre">date</span></code>), menghasilkan grafik garis (line chart) yang menunjukkan naik-turunnya konsentrasi polutan dari waktu ke waktu. Proses yang sama diulang untuk CO dan SO2 dengan mengganti sumber data dan warna garis.</p>
+</section>
+<section id="hasil-visualisasi-dan-interpretasi">
+<h4>3.2.2 Hasil Visualisasi dan Interpretasi<a class="headerlink" href="#hasil-visualisasi-dan-interpretasi" title="Link to this heading">#</a></h4>
+<p><strong>Time Series CO</strong></p>
+<p><img alt="Grafik Time Series CO" src="../_images/grafik_CO.png" /></p>
+<p>Grafik time series CO menunjukkan konsentrasi yang berfluktuasi pada rentang 0.018–0.046 mol/m², dengan pola yang relatif stabil pada periode Agustus 2025–Februari 2026. Memasuki Maret 2026 hingga Agustus 2026, terlihat kecenderungan tren naik secara bertahap, mengindikasikan peningkatan aktivitas pembakaran (kendaraan bermotor atau industri) menjelang pertengahan hingga akhir periode pengamatan. Beberapa celah kosong pada grafik (misalnya sekitar November–Desember 2025) menunjukkan hari-hari tanpa data valid akibat gangguan tutupan awan pada citra satelit.</p>
+<p><strong>Time Series NO2</strong></p>
+<p><img alt="Grafik Time Series NO2" src="../_images/grafik_NO2.png" /></p>
+<p>Konsentrasi NO2 bergerak pada rentang 0.0000009–0.00009 mol/m², dengan pola yang senada dengan CO — relatif landai pada paruh pertama periode (September 2025–Maret 2026), kemudian meningkat signifikan pada paruh kedua (April–Agustus 2026), dengan puncak tertinggi terjadi pada Agustus 2026. Tren naik ini konsisten dengan pola CO, yang mengindikasikan kedua polutan kemungkinan berasal dari sumber emisi yang serupa, yaitu aktivitas kendaraan bermotor dan pembakaran bahan bakar fosil.</p>
+<p><strong>Time Series SO2</strong></p>
+<p><img alt="Grafik Time Series SO2" src="../_images/grafik_SO2.png" /></p>
+<p>Berbeda dari NO2 dan CO, grafik SO2 menunjukkan pola yang jauh lebih fluktuatif dan tidak stabil, dengan rentang nilai dari -0.0004 hingga 0.0008 mol/m². Adanya <strong>nilai negatif</strong> pada beberapa titik waktu merupakan temuan penting, karena secara fisik konsentrasi gas tidak mungkin bernilai negatif — ini mengindikasikan noise atau kesalahan pengukuran pada data mentah SO2 yang perlu dibersihkan pada tahap preprocessing. Lonjakan tajam (spike) yang muncul berulang, terutama pada periode April–Juni 2026, juga mengindikasikan adanya outlier yang signifikan dibanding pola umum data.</p>
+</section>
+</section>
+<hr class="docutils" />
 <section id="deteksi-outlier-dengan-orange-data-mining">
-<h3>3.2 Deteksi Outlier dengan Orange Data Mining<a class="headerlink" href="#deteksi-outlier-dengan-orange-data-mining" title="Link to this heading">#</a></h3>
+<h3>3.3 Deteksi Outlier dengan Orange Data Mining<a class="headerlink" href="#deteksi-outlier-dengan-orange-data-mining" title="Link to this heading">#</a></h3>
 <p><strong>NO2</strong></p>
 <p><img alt="Outlier NO2 Orange" src="../_images/no2.png" /></p>
 <p>Proses deteksi outlier pada data NO2 menghasilkan 329 data inlier (normal) dan 35 data outlier dari total 364 hari pengamatan, dengan persentase missing value sebesar 58.4% pada kelompok inlier. Outlier terdeteksi antara lain pada tanggal 30 Agustus 2025, yang menunjukkan nilai konsentrasi NO2 menyimpang signifikan dari pola umum data pada titik grid tersebut.</p>
@@ -687,7 +735,7 @@ Untuk NO2</p>
 <p>Hasil deteksi outlier pada data SO2 menunjukkan 331 data inlier dan 30 data outlier dari 361 baris data, dengan tingkat missing value sebesar 40.7% pada kelompok inlier. Menariknya, ditemukan nilai negatif pada beberapa titik grid (misalnya -0.000394646), yang mengindikasikan adanya noise atau kesalahan pengukuran pada citra satelit, mengingat secara fisik konsentrasi gas tidak mungkin bernilai negatif.</p>
 </section>
 <section id="catatan-penting">
-<h3>3.3 Catatan Penting<a class="headerlink" href="#catatan-penting" title="Link to this heading">#</a></h3>
+<h3>3.4 Catatan Penting<a class="headerlink" href="#catatan-penting" title="Link to this heading">#</a></h3>
 <p>Ditemukannya nilai negatif pada SO2 (baik di grafik Excel maupun hasil deteksi outlier Orange) merupakan temuan penting dalam tahap Data Understanding — ini menjadi sinyal bahwa <strong>preprocessing untuk SO2 memerlukan penanganan khusus</strong>, seperti pembersihan nilai negatif yang secara fisik tidak valid, sebelum data dapat digunakan untuk analisis tren maupun pemodelan lebih lanjut.</p>
 <hr class="docutils" />
 </section>
@@ -783,8 +831,13 @@ Untuk NO2</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dokumentasi-visual-eksplorasi-awal-dan-deteksi-outlier">3. Dokumentasi Visual — Eksplorasi Awal dan Deteksi Outlier</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafik-time-series-mentah-excel">3.1 Grafik Time Series Mentah (Excel)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dengan-orange-data-mining">3.2 Deteksi Outlier dengan Orange Data Mining</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting">3.3 Catatan Penting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafik-time-series-python">3.2 Grafik Time Series (Python)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-kode">3.2.1 Penjelasan Kode</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-visualisasi-dan-interpretasi">3.2.2 Hasil Visualisasi dan Interpretasi</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dengan-orange-data-mining">3.3 Deteksi Outlier dengan Orange Data Mining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting">3.4 Catatan Penting</a></li>
 </ul>
 </li>
 </ul>

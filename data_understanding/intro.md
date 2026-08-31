@@ -212,8 +212,65 @@ Grafik di atas menampilkan visualisasi awal konsentrasi CO dan NO2 dari seluruh 
 ![Grafik SO2 Excel](../img/gso2.png)
  
 Grafik SO2 menunjukkan pola fluktuasi yang tidak stabil, ditandai dengan munculnya nilai negatif pada sumbu Y — sesuatu yang secara fisik tidak mungkin terjadi pada konsentrasi gas sebenarnya. Hal ini mengindikasikan adanya noise atau outlier pada data mentah SO2 yang perlu ditangani lebih lanjut sebelum data dapat dianalisis secara akurat.
+
+### 3.2 Grafik Time Series (Python)
+Untuk melihat tren kualitas udara secara lebih jelas dan akurat dibanding grafik Excel sebelumnya, data mentah tiap polutan (grid 3×3) diolah menggunakan Python: dihitung rata-rata hariannya, lalu divisualisasikan sebagai grafik time series menggunakan library `pandas` dan `matplotlib`.
+
+#### 3.2.1 Penjelasan Kode
  
-### 3.2 Deteksi Outlier dengan Orange Data Mining
+**Membaca data dan menghitung rata-rata harian**
+ 
+```python
+def hitung_rata_rata_harian(filepath, prefix):
+    df = pd.read_csv(filepath, parse_dates=['date'])
+    grid_cols = [c for c in df.columns if c.startswith(prefix)]
+    df['mean'] = df[grid_cols].mean(axis=1, skipna=True)
+    hasil = df[['date', 'mean']].sort_values('date').reset_index(drop=True)
+    return hasil
+```
+ 
+Fungsi ini membaca file CSV mentah (misalnya `NO2_Jombang_raw.csv`), lalu mengambil seluruh kolom grid (`NO2_r0_c0` sampai `NO2_r2_c2`) dan menghitung rata-ratanya untuk tiap baris (tiap hari). Parameter `skipna=True` memastikan nilai yang hilang (NaN) **diabaikan saat menghitung rata-rata**, bukan dianggap nol — sehingga hasil rata-ratanya tetap representatif meski ada data yang tidak lengkap. Data juga diurutkan berdasarkan tanggal (`sort_values('date')`) agar grafik time series berjalan kronologis.
+ 
+**Membuat grafik time series**
+ 
+```python
+plt.figure(figsize=(12, 4))
+plt.plot(no2_daily['date'], no2_daily['mean'], color='tab:blue')
+plt.title('Rata-rata Harian NO2 — Jombang')
+plt.xlabel('Tanggal')
+plt.ylabel('NO2 (mol/m²)')
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.savefig('grafik_NO2.png', dpi=150)
+plt.show()
+```
+ 
+Kode ini memplot nilai rata-rata harian (`mean`) terhadap tanggal (`date`), menghasilkan grafik garis (line chart) yang menunjukkan naik-turunnya konsentrasi polutan dari waktu ke waktu. Proses yang sama diulang untuk CO dan SO2 dengan mengganti sumber data dan warna garis.
+ 
+#### 3.2.2 Hasil Visualisasi dan Interpretasi
+ 
+**Time Series CO**
+ 
+![Grafik Time Series CO](../img/grafik_CO.png)
+ 
+Grafik time series CO menunjukkan konsentrasi yang berfluktuasi pada rentang 0.018–0.046 mol/m², dengan pola yang relatif stabil pada periode Agustus 2025–Februari 2026. Memasuki Maret 2026 hingga Agustus 2026, terlihat kecenderungan tren naik secara bertahap, mengindikasikan peningkatan aktivitas pembakaran (kendaraan bermotor atau industri) menjelang pertengahan hingga akhir periode pengamatan. Beberapa celah kosong pada grafik (misalnya sekitar November–Desember 2025) menunjukkan hari-hari tanpa data valid akibat gangguan tutupan awan pada citra satelit.
+ 
+**Time Series NO2**
+ 
+![Grafik Time Series NO2](../img/grafik_NO2.png)
+ 
+Konsentrasi NO2 bergerak pada rentang 0.0000009–0.00009 mol/m², dengan pola yang senada dengan CO — relatif landai pada paruh pertama periode (September 2025–Maret 2026), kemudian meningkat signifikan pada paruh kedua (April–Agustus 2026), dengan puncak tertinggi terjadi pada Agustus 2026. Tren naik ini konsisten dengan pola CO, yang mengindikasikan kedua polutan kemungkinan berasal dari sumber emisi yang serupa, yaitu aktivitas kendaraan bermotor dan pembakaran bahan bakar fosil.
+ 
+**Time Series SO2**
+ 
+![Grafik Time Series SO2](../img/grafik_SO2.png)
+ 
+Berbeda dari NO2 dan CO, grafik SO2 menunjukkan pola yang jauh lebih fluktuatif dan tidak stabil, dengan rentang nilai dari -0.0004 hingga 0.0008 mol/m². Adanya **nilai negatif** pada beberapa titik waktu merupakan temuan penting, karena secara fisik konsentrasi gas tidak mungkin bernilai negatif — ini mengindikasikan noise atau kesalahan pengukuran pada data mentah SO2 yang perlu dibersihkan pada tahap preprocessing. Lonjakan tajam (spike) yang muncul berulang, terutama pada periode April–Juni 2026, juga mengindikasikan adanya outlier yang signifikan dibanding pola umum data.
+ 
+---
+
+ 
+### 3.3 Deteksi Outlier dengan Orange Data Mining
  
 **NO2**
  
@@ -227,7 +284,7 @@ Proses deteksi outlier pada data NO2 menghasilkan 329 data inlier (normal) dan 3
  
 Hasil deteksi outlier pada data SO2 menunjukkan 331 data inlier dan 30 data outlier dari 361 baris data, dengan tingkat missing value sebesar 40.7% pada kelompok inlier. Menariknya, ditemukan nilai negatif pada beberapa titik grid (misalnya -0.000394646), yang mengindikasikan adanya noise atau kesalahan pengukuran pada citra satelit, mengingat secara fisik konsentrasi gas tidak mungkin bernilai negatif.
  
-### 3.3 Catatan Penting
+### 3.4 Catatan Penting
  
 Ditemukannya nilai negatif pada SO2 (baik di grafik Excel maupun hasil deteksi outlier Orange) merupakan temuan penting dalam tahap Data Understanding — ini menjadi sinyal bahwa **preprocessing untuk SO2 memerlukan penanganan khusus**, seperti pembersihan nilai negatif yang secara fisik tidak valid, sebelum data dapat digunakan untuk analisis tren maupun pemodelan lebih lanjut.
  
