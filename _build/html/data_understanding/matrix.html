@@ -1,0 +1,1091 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dokumentasi: Migrasi Data Time Series Polutan ke Aiven PostgreSQL &amp; Analisis Statistik Deskriptif di KNIME &#8212; Proyek Sains Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'data_understanding/matrix';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Markdown Files" href="../markdown.html" />
+    <link rel="prev" title="Data Understanding" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Proyek Sains Data - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Proyek Sains Data - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to My Project Science Data
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../business/intro.html">Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Data Understanding</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dokumentasi: Migrasi Data Time Series Polutan ke Aiven PostgreSQL &amp; Analisis Statistik Deskriptif di KNIME</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../markdown.html">Markdown Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fdata_understanding/matrix.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/data_understanding/matrix.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Dokumentasi: Migrasi Data Time Series Polutan ke Aiven PostgreSQL & Analisis Statistik Deskriptif di KNIME</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-kerja">1. Ringkasan Alur Kerja</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-a-migrasi-data-time-series-ke-postgresql-aiven">2. Bagian A — Migrasi Data Time Series ke PostgreSQL Aiven</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-layanan-aiven-postgresql">2.1 Persiapan Layanan Aiven PostgreSQL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-tabel-time-series-polutan">2.2 Membuat Tabel Time Series Polutan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#migrasi-data-ke-aiven-postgresql-import-via-pgadmin-4">2.3 Migrasi Data ke Aiven PostgreSQL (Import via pgAdmin 4)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspeksi-data-via-pgadmin-4">3. Inspeksi Data via pgAdmin 4</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#registrasi-koneksi-server">3.1 Registrasi Koneksi Server</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspeksi-tabel-data">3.2 Inspeksi Tabel Data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menarik-data-dari-aiven-postgresql-ke-knime">4. Menarik Data dari Aiven PostgreSQL ke KNIME</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-driver-jdbc">4.1 Persiapan Driver JDBC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#node-yang-digunakan">4.2 Node yang Digunakan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#konfigurasi-node">4.3 Konfigurasi Node</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-metrik-node-statistics-rumus-contoh-perhitungan">5. Penjelasan Metrik Node Statistics: Rumus &amp; Contoh Perhitungan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#min-max">5.1 Min &amp; Max</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean">5.2 Mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#std-deviation-standar-deviasi">5.3 Std. Deviation (Standar Deviasi)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-varians">5.4 Variance (Varians)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skewness">5.5 Skewness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kurtosis">5.6 Kurtosis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overall-sum">5.7 Overall Sum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metrik-kualitas-anomali-data">5.8 Metrik Kualitas / Anomali Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#median">5.9 Median</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dokumentasi-migrasi-data-time-series-polutan-ke-aiven-postgresql-analisis-statistik-deskriptif-di-knime">
+<h1>Dokumentasi: Migrasi Data Time Series Polutan ke Aiven PostgreSQL &amp; Analisis Statistik Deskriptif di KNIME<a class="headerlink" href="#dokumentasi-migrasi-data-time-series-polutan-ke-aiven-postgresql-analisis-statistik-deskriptif-di-knime" title="Link to this heading">#</a></h1>
+<section id="ringkasan-alur-kerja">
+<h2>1. Ringkasan Alur Kerja<a class="headerlink" href="#ringkasan-alur-kerja" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Sumber</span> <span class="n">Data</span> <span class="n">Time</span> <span class="n">Series</span> <span class="n">Polutan</span><span class="p">:</span> <span class="n">NO2</span><span class="p">,</span> <span class="n">CO</span><span class="p">,</span> <span class="n">SO2</span><span class="p">,</span> <span class="n">O3</span><span class="p">]</span>
+        <span class="o">|</span>
+        <span class="n">v</span>
+<span class="p">[</span><span class="n">PostgreSQL</span> <span class="n">Aiven</span><span class="p">]</span>  <span class="o">&lt;--</span> <span class="n">Bagian</span> <span class="n">A</span><span class="p">:</span> <span class="n">migrasi</span><span class="o">/</span><span class="n">insert</span> <span class="n">data</span>
+        <span class="o">|</span>
+        <span class="n">v</span>
+<span class="p">[</span><span class="n">pgAdmin</span> <span class="mi">4</span><span class="p">]</span>  <span class="o">&lt;--</span> <span class="n">Bagian</span> <span class="n">B</span><span class="p">:</span> <span class="n">inspeksi</span> <span class="o">&amp;</span> <span class="n">verifikasi</span> <span class="n">data</span>
+        <span class="o">|</span>
+        <span class="n">v</span>
+<span class="p">[</span><span class="n">KNIME</span> <span class="o">-</span> <span class="n">PostgreSQL</span> <span class="n">Connector</span> <span class="o">-&gt;</span> <span class="n">DB</span> <span class="n">Table</span> <span class="n">Selector</span> <span class="o">-&gt;</span> <span class="n">DB</span> <span class="n">Reader</span><span class="p">]</span>  <span class="o">&lt;--</span> <span class="n">Bagian</span> <span class="n">C</span><span class="p">:</span> <span class="n">tarik</span> <span class="n">data</span>
+        <span class="o">|</span>
+        <span class="n">v</span>
+<span class="p">[</span><span class="n">KNIME</span> <span class="o">-</span> <span class="n">Statistics</span> <span class="n">Node</span><span class="p">]</span>  <span class="o">&lt;--</span> <span class="n">Bagian</span> <span class="n">D</span> <span class="o">&amp;</span> <span class="n">E</span><span class="p">:</span> <span class="n">analisis</span> <span class="n">statistik</span> <span class="n">deskriptif</span>
+</pre></div>
+</div>
+<p>Dataset contoh pada dokumen ini berupa data konsentrasi polutan udara harian
+(<code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">co</span></code>, <code class="docutils literal notranslate"><span class="pre">so2</span></code>) yang disimpan sebagai time series di Aiven PostgreSQL.</p>
+</section>
+<section id="bagian-a-migrasi-data-time-series-ke-postgresql-aiven">
+<h2>2. Bagian A — Migrasi Data Time Series ke PostgreSQL Aiven<a class="headerlink" href="#bagian-a-migrasi-data-time-series-ke-postgresql-aiven" title="Link to this heading">#</a></h2>
+<section id="persiapan-layanan-aiven-postgresql">
+<h3>2.1 Persiapan Layanan Aiven PostgreSQL<a class="headerlink" href="#persiapan-layanan-aiven-postgresql" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Login ke <a class="reference external" href="https://console.aiven.io/">Aiven Console</a>.</p></li>
+<li><p>Buat service baru: <strong>Create a new service</strong> → pilih <strong>PostgreSQL</strong>.</p></li>
+<li><p>Pilih cloud provider, region, dan plan (mis. <code class="docutils literal notranslate"><span class="pre">hobbyist</span></code>, <code class="docutils literal notranslate"><span class="pre">startup-4</span></code>, dst).</p></li>
+<li><p>Tunggu status service menjadi <strong>Running</strong>.</p></li>
+<li><p>Buka tab <strong>Overview</strong> pada service, lalu catat parameter <strong>Connection information</strong>:</p>
+<ul class="simple">
+<li><p><strong>Host</strong>, mis. <code class="docutils literal notranslate"><span class="pre">pg-xxxxxxxx-project.e.aivencloud.com</span></code></p></li>
+<li><p><strong>Port</strong>, mis. <code class="docutils literal notranslate"><span class="pre">14706</span></code></p></li>
+<li><p><strong>User</strong> (default: <code class="docutils literal notranslate"><span class="pre">avnadmin</span></code>)</p></li>
+<li><p><strong>Password</strong> (klik ikon mata / <em>copy</em> untuk menyalin)</p></li>
+<li><p><strong>Database name</strong>, mis. <code class="docutils literal notranslate"><span class="pre">defaultdb</span></code> atau nama kustom (mis. <code class="docutils literal notranslate"><span class="pre">PSD_Polutan</span></code>)</p></li>
+<li><p><strong>SSL Mode:</strong> <code class="docutils literal notranslate"><span class="pre">require</span></code>
+<img alt="Preview Aiven" src="../_images/aiven.png" /></p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="membuat-tabel-time-series-polutan">
+<h3>2.2 Membuat Tabel Time Series Polutan<a class="headerlink" href="#membuat-tabel-time-series-polutan" title="Link to this heading">#</a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">polutan</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="nb">date</span><span class="w">    </span><span class="nb">DATE</span><span class="w">            </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">no2</span><span class="w">     </span><span class="nb">NUMERIC</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>sebagai catatan saya membuat 3 tabel yg sama jadi ada co,no2 dan so2 dan untuk struktur tabelnya sama</p>
+</section>
+<section id="migrasi-data-ke-aiven-postgresql-import-via-pgadmin-4">
+<h3>2.3 Migrasi Data ke Aiven PostgreSQL (Import via pgAdmin 4)<a class="headerlink" href="#migrasi-data-ke-aiven-postgresql-import-via-pgadmin-4" title="Link to this heading">#</a></h3>
+<p>Migrasi data time series polutan dilakukan langsung lewat fitur <strong>Import/Export Data</strong>
+bawaan pgAdmin 4.</p>
+<ol class="arabic simple">
+<li><p>Pada panel kiri pgAdmin, navigasikan ke:
+<strong>Databases</strong> → <code class="docutils literal notranslate"><span class="pre">sainsdata</span></code> → <strong>Schemas</strong> → <code class="docutils literal notranslate"><span class="pre">public</span></code> → <strong>Tables</strong> → <code class="docutils literal notranslate"><span class="pre">CO</span></code>.</p></li>
+<li><p>Klik kanan tabel <code class="docutils literal notranslate"><span class="pre">CO</span></code>, lalu pilih <strong>Import/Export Data…</strong>.</p></li>
+<li><p>Pada dialog yang muncul:</p>
+<ul class="simple">
+<li><p>Toggle di kiri atas diarahkan ke <strong>Import</strong> (bukan Export).</p></li>
+<li><p><strong>Filename:</strong> pilih file sumber data time series (<code class="docutils literal notranslate"><span class="pre">CO_Jombang_final.csv</span></code>).</p></li>
+<li><p><strong>Format:</strong> pilih <code class="docutils literal notranslate"><span class="pre">csv</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Buka tab <strong>Options</strong>, sesuaikan pengaturan berikut:</p>
+<ul class="simple">
+<li><p><strong>Header:</strong> aktifkan (<code class="docutils literal notranslate"><span class="pre">ON</span></code>) bila baris pertama file berisi nama kolom.</p></li>
+<li><p><strong>Delimiter:</strong> <code class="docutils literal notranslate"><span class="pre">,</span></code> (atau sesuaikan dengan delimiter file sumber).</p></li>
+<li><p><strong>Encoding:</strong> biarkan default (<code class="docutils literal notranslate"><span class="pre">UTF8</span></code>) kecuali file memakai encoding lain.</p></li>
+</ul>
+</li>
+<li><p>Buka tab <strong>Columns</strong>, pastikan kolom yang di-<em>import</em> (<code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">co</span></code>, <code class="docutils literal notranslate"><span class="pre">so2</span></code>)
+sudah sesuai urutan/nama dengan struktur tabel <code class="docutils literal notranslate"><span class="pre">CO</span></code>.</p></li>
+<li><p>Klik <strong>OK</strong> untuk memulai proses import. pgAdmin akan menampilkan progress bar dan
+notifikasi <em>“Process completed”</em> bila berhasil.</p></li>
+<li><p>Verifikasi hasil import: klik kanan tabel <code class="docutils literal notranslate"><span class="pre">CO</span></code> → <strong>View/Edit Data</strong> → <strong>All Rows</strong>
+untuk memastikan seluruh baris time series sudah masuk.</p></li>
+</ol>
+</section>
+</section>
+<section id="inspeksi-data-via-pgadmin-4">
+<h2>3. Inspeksi Data via pgAdmin 4<a class="headerlink" href="#inspeksi-data-via-pgadmin-4" title="Link to this heading">#</a></h2>
+<p>pgAdmin 4 dipakai untuk meninjau tabel dan datanya secara visual sebelum diproses lebih lanjut.</p>
+<section id="registrasi-koneksi-server">
+<h3>3.1 Registrasi Koneksi Server<a class="headerlink" href="#registrasi-koneksi-server" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Buka <strong>pgAdmin 4</strong> → panel kiri (Browser) → klik kanan <strong>Servers</strong> → <strong>Register</strong> → <strong>Server…</strong></p></li>
+<li><p>Tab <strong>General</strong>: isi nama koneksi, mis. <code class="docutils literal notranslate"><span class="pre">Aiven</span> <span class="pre">PSD</span></code>.</p></li>
+<li><p>Tab <strong>Connection</strong>, isi:</p>
+<ul class="simple">
+<li><p><strong>Host name/address:</strong> host dari Bagian 2.1</p></li>
+<li><p><strong>Port:</strong> port dari Bagian 2.1</p></li>
+<li><p><strong>Maintenance database:</strong> <code class="docutils literal notranslate"><span class="pre">sainsdata</span></code></p></li>
+<li><p><strong>Username:</strong> <code class="docutils literal notranslate"><span class="pre">avnadmin</span></code></p></li>
+<li><p><strong>Password:</strong> password dari Bagian 2.1, centang <strong>Save password?</strong>
+<img alt="Node knime" src="../_images/register.png" /></p></li>
+</ul>
+</li>
+<li><p>Klik <strong>Save</strong> untuk menyimpan konfigurasi dan memulai koneksi.</p></li>
+</ol>
+</section>
+<section id="inspeksi-tabel-data">
+<h3>3.2 Inspeksi Tabel Data<a class="headerlink" href="#inspeksi-tabel-data" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Navigasikan tree: <strong>Databases</strong> → <code class="docutils literal notranslate"><span class="pre">sainsdata</span></code> → <strong>Schemas</strong> → <code class="docutils literal notranslate"><span class="pre">public</span></code> → <strong>Tables</strong> → <code class="docutils literal notranslate"><span class="pre">CO</span></code>.</p></li>
+<li><p>Klik kanan tabel <code class="docutils literal notranslate"><span class="pre">CO</span></code> → <strong>View/Edit Data</strong> → <strong>All Rows</strong>.</p></li>
+<li><p>Pastikan kolom time series (<code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">co</span></code>, <code class="docutils literal notranslate"><span class="pre">so2</span></code>) tampil dengan format yang benar.</p></li>
+<li><p>Nilai <code class="docutils literal notranslate"><span class="pre">[null]</span></code> yang muncul pada tahap ini adalah hal yang wajar — nantinya akan
+teridentifikasi sebagai <em>missing values</em> pada tahap analisis statistik.
+<img alt="Node knime" src="../_images/viewdata.png" /></p></li>
+</ol>
+</section>
+</section>
+<section id="menarik-data-dari-aiven-postgresql-ke-knime">
+<h2>4. Menarik Data dari Aiven PostgreSQL ke KNIME<a class="headerlink" href="#menarik-data-dari-aiven-postgresql-ke-knime" title="Link to this heading">#</a></h2>
+<section id="persiapan-driver-jdbc">
+<h3>4.1 Persiapan Driver JDBC<a class="headerlink" href="#persiapan-driver-jdbc" title="Link to this heading">#</a></h3>
+<p>Tambahkan driver JDBC PostgreSQL (<code class="docutils literal notranslate"><span class="pre">postgresql-42.x.x.jar</span></code>) pada
+<strong>File → Preferences → KNIME → Databases</strong> bila belum terdaftar.</p>
+</section>
+<section id="node-yang-digunakan">
+<h3>4.2 Node yang Digunakan<a class="headerlink" href="#node-yang-digunakan" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Node</p></th>
+<th class="head"><p>Fungsi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>PostgreSQL Connector</strong></p></td>
+<td><p>Menghubungkan KNIME ke server Aiven</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>DB Table Selector</strong></p></td>
+<td><p>Menyeleksi tabel/skema di dalam database</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>DB Reader</strong></p></td>
+<td><p>Memuat hasil query menjadi tabel di memori KNIME</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Statistics</strong></p></td>
+<td><p>Menghitung metrik statistik deskriptif</p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="Node knime" src="../_images/knime.png" /></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Alur node:</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>PostgreSQL Connector → DB Table Selector → DB Reader → Statistics
+</pre></div>
+</div>
+</section>
+<section id="konfigurasi-node">
+<h3>4.3 Konfigurasi Node<a class="headerlink" href="#konfigurasi-node" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Klik ganda <strong>PostgreSQL Connector</strong> → isi <em>Hostname</em>, <em>Port</em>, <em>Database name</em>
+(<code class="docutils literal notranslate"><span class="pre">sainsdata</span></code>), serta <em>Credentials</em> (identik dengan Bagian 2.1 &amp; 3.1).</p></li>
+<li><p>Klik ganda <strong>DB Table Selector</strong> → pilih skema <code class="docutils literal notranslate"><span class="pre">public</span></code>, tabel <code class="docutils literal notranslate"><span class="pre">CO</span></code>
+(atau tulis custom query bila perlu filter tanggal tertentu).</p></li>
+<li><p>Klik kanan <strong>DB Reader</strong> → <strong>Execute</strong>. Lampu indikator hijau menandakan proses berhasil.</p></li>
+<li><p>Hubungkan <strong>DB Reader → Statistics</strong>, lalu klik kanan <strong>Statistics</strong> → <strong>Execute</strong>.</p></li>
+<li><p>Setelah selesai, klik kanan <strong>Statistics</strong> → <strong>Statistics View</strong> untuk melihat tabel hasil.</p></li>
+</ol>
+</section>
+</section>
+<section id="penjelasan-metrik-node-statistics-rumus-contoh-perhitungan">
+<h2>5. Penjelasan Metrik Node Statistics: Rumus &amp; Contoh Perhitungan<a class="headerlink" href="#penjelasan-metrik-node-statistics-rumus-contoh-perhitungan" title="Link to this heading">#</a></h2>
+<p>Node <strong>Statistics</strong> KNIME menghasilkan ringkasan untuk tiap kolom polutan (<code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">co</span></code>,
+<code class="docutils literal notranslate"><span class="pre">so2</span></code>). Berikut penjelasan setiap metrik, rumus, dan contoh perhitungannya —
+dihitung <strong>langsung dari 365 data mentah</strong> kolom <code class="docutils literal notranslate"><span class="pre">CO</span></code> (<code class="docutils literal notranslate"><span class="pre">CO_Jombang_final.csv</span></code>),
+bukan lagi estimasi/reverse-engineering:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">365</span> <span class="o">|</span> <span class="n">Missing</span> <span class="n">values</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">Min</span> <span class="o">=</span> <span class="mf">0.018216</span> <span class="o">|</span> <span class="n">Max</span> <span class="o">=</span> <span class="mf">0.046469</span> <span class="o">|</span> <span class="n">Mean</span> <span class="p">(</span><span class="n">x̄</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.029692</span> <span class="o">|</span> <span class="n">Std</span><span class="o">.</span> <span class="n">dev</span> <span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.003717</span>
+<span class="n">Variance</span> <span class="o">=</span> <span class="mf">0.0000138</span> <span class="o">|</span> <span class="n">Skewness</span> <span class="o">=</span> <span class="mf">0.548</span> <span class="o">|</span> <span class="n">Kurtosis</span> <span class="o">=</span> <span class="mf">1.342</span>
+<span class="n">Overall</span> <span class="nb">sum</span> <span class="o">=</span> <span class="mf">10.837617</span> <span class="o">|</span> <span class="n">Median</span> <span class="o">=</span> <span class="mf">0.029194</span>
+</pre></div>
+</div>
+<p>✓ Semua angka di atas cocok dengan hasil output node Statistics KNIME
+(Min 0.018, Max 0.046, Mean 0.03, Std 0.004, Skewness 0.548, Kurtosis 1.342, Sum 10.838).</p>
+<section id="min-max">
+<h3>5.1 Min &amp; Max<a class="headerlink" href="#min-max" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Penjelasan:</strong> Nilai observasi terendah (Min) dan tertinggi (Max) dalam kolom;
+berguna untuk mengetahui rentang data.</p></li>
+<li><p><strong>Rumus:</strong> Urutkan data dari terkecil ke terbesar (<code class="docutils literal notranslate"><span class="pre">X1,</span> <span class="pre">X2,</span> <span class="pre">...,</span> <span class="pre">Xn</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[ Min = X_1 \quad \text{(data urutan pertama)} \]</div>
+<div class="math notranslate nohighlight">
+\[ Max = X_n \quad \text{(data urutan terakhir)} \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Min</span> <span class="o">=</span> <span class="n">X1</span>   <span class="p">(</span><span class="n">data</span> <span class="n">urutan</span> <span class="n">pertama</span><span class="p">)</span>
+<span class="n">Max</span> <span class="o">=</span> <span class="n">Xn</span>   <span class="p">(</span><span class="n">data</span> <span class="n">urutan</span> <span class="n">terakhir</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Substitusi angka:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Min</span> <span class="o">=</span> <span class="mf">0.018216</span>
+<span class="n">Max</span> <span class="o">=</span> <span class="mf">0.046469</span>
+<span class="n">Rentang</span> <span class="o">=</span> <span class="n">Max</span> <span class="o">-</span> <span class="n">Min</span> <span class="o">=</span> <span class="mf">0.046469</span> <span class="o">-</span> <span class="mf">0.018216</span> <span class="o">=</span> <span class="mf">0.028253</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="mean">
+<h3>5.2 Mean<a class="headerlink" href="#mean" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Penjelasan:</strong> Nilai pusat/rata-rata dari seluruh observasi yang valid (tidak kosong).</p></li>
+<li><p><strong>Rumus:</strong></p>
+<div class="math notranslate nohighlight">
+\[ \bar{x} = \frac{\sum_{i=1}^{n} x_i}{n} \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x̄</span> <span class="o">=</span> <span class="p">(</span> <span class="n">Σ</span> <span class="n">xi</span> <span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+   <span class="o">=</span> <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">x3</span> <span class="o">+</span> <span class="o">...</span> <span class="o">+</span> <span class="n">xn</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Substitusi angka:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span>   <span class="o">=</span> <span class="mi">365</span>
+<span class="n">Sum</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">+</span> <span class="o">...</span> <span class="o">+</span> <span class="n">xn</span>
+    <span class="o">=</span> <span class="mf">0.030865788</span> <span class="o">+</span> <span class="mf">0.029476058</span> <span class="o">+</span> <span class="mf">0.028086325</span> <span class="o">+</span> <span class="o">...</span> <span class="o">+</span> <span class="mf">0.03865425</span>
+    <span class="o">=</span> <span class="mf">10.837617</span>
+
+<span class="n">x̄</span> <span class="o">=</span> <span class="mf">10.837617</span> <span class="o">/</span> <span class="mi">365</span>
+<span class="n">x̄</span> <span class="o">=</span> <span class="mf">0.029692</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>✓ Sesuai dengan hasil node Statistics KNIME (<code class="docutils literal notranslate"><span class="pre">Mean</span> <span class="pre">=</span> <span class="pre">0.03</span></code>).</p>
+</section>
+<hr class="docutils" />
+<section id="std-deviation-standar-deviasi">
+<h3>5.3 Std. Deviation (Standar Deviasi)<a class="headerlink" href="#std-deviation-standar-deviasi" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Penjelasan:</strong> Mengukur seberapa jauh rata-rata simpangan titik data terhadap Mean.
+Nilai rendah → data konsisten/mengelompok; nilai tinggi → fluktuasi lebar.</p></li>
+<li><p><strong>Rumus (sampel):</strong></p>
+<div class="math notranslate nohighlight">
+\[ s = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1}} \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>s = √( Σ(xi - x̄)² / (n - 1) )
+</pre></div>
+</div>
+<p>dimana:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xi</span></code> adalah data ke-i</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x̄</span></code> adalah rata-rata dari x (Mean)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code> adalah jumlah baris valid (total baris dikurangi missing values)</p></li>
+</ul>
+</li>
+<li><p><strong>Substitusi angka:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>n  = 365
+x̄  = 0.029692
+
+Σ(xi - x̄)² = 0.005029114
+
+s = √( 0.005029114 / (365 - 1) )
+s = √( 0.005029114 / 364 )
+s = √0.0000138162
+s = 0.003717
+</pre></div>
+</div>
+</li>
+</ul>
+<p>✓ Sesuai dengan hasil node Statistics KNIME (<code class="docutils literal notranslate"><span class="pre">Std.</span> <span class="pre">dev</span> <span class="pre">=</span> <span class="pre">0.004</span></code>).</p>
+</section>
+<hr class="docutils" />
+<section id="variance-varians">
+<h3>5.4 Variance (Varians)<a class="headerlink" href="#variance-varians" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Penjelasan:</strong> Rata-rata kuadrat selisih tiap data terhadap Mean; secara matematis
+merupakan kuadrat dari Standar Deviasi.</p></li>
+<li><p><strong>Rumus (sampel):</strong></p>
+<div class="math notranslate nohighlight">
+\[ s^2 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1} \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>s² = Σ(xi - x̄)² / (n - 1)
+</pre></div>
+</div>
+</li>
+<li><p><strong>Substitusi angka:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>v = s²
+v = 0.003717²
+v = 0.0000138
+</pre></div>
+</div>
+</li>
+</ul>
+<p>✓ Sesuai dengan hasil node Statistics KNIME (tampil <code class="docutils literal notranslate"><span class="pre">0</span></code> karena dibulatkan tanpa desimal).</p>
+</section>
+<hr class="docutils" />
+<section id="skewness">
+<h3>5.5 Skewness<a class="headerlink" href="#skewness" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Penjelasan:</strong> Mengukur asimetri (ketidakseimbangan) distribusi data terhadap Mean-nya.</p>
+<ul class="simple">
+<li><p><em>Skewness = 0</em>: distribusi simetris (normal).</p></li>
+<li><p><em>Skewness &gt; 0</em>: ekor memanjang ke <strong>kanan</strong> (ada nilai ekstrem tinggi).</p></li>
+<li><p><em>Skewness &lt; 0</em>: ekor memanjang ke <strong>kiri</strong> (ada nilai ekstrem rendah).</p></li>
+</ul>
+</li>
+<li><p><strong>Rumus (Fisher-Pearson):</strong></p>
+<div class="math notranslate nohighlight">
+\[ Skewness = \frac{n}{(n-1)(n-2)} \sum_{i=1}^{n} \left(\frac{x_i - \bar{x}}{s}\right)^3 \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Skewness = [ n / ((n-1)(n-2)) ] x Σ [ (xi - x̄) / s ]³
+</pre></div>
+</div>
+<p>Rumus di atas dikelompokkan jadi 2 komponen agar mudah dihitung manual:</p>
+<div class="math notranslate nohighlight">
+\[ Skewness = \underbrace{\frac{n}{(n-1)(n-2)}}_{A} \underbrace{\sum_{i=1}^{n}\left(\frac{x_i-\bar{x}}{s}\right)^3}_{B} \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Skewness = A x B
+
+A = n / ((n-1)(n-2))
+B = Σ [ (xi - x̄) / s ]³
+</pre></div>
+</div>
+</li>
+<li><p><strong>Menghitung A:</strong></p>
+<div class="math notranslate nohighlight">
+\[ A = \frac{n}{(n-1)(n-2)} = \frac{365}{(365-1)(365-2)} = \frac{365}{132132} \]</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">A</span> <span class="o">=</span> <span class="mi">365</span> <span class="o">/</span> <span class="p">((</span><span class="mi">365</span><span class="o">-</span><span class="mi">1</span><span class="p">)(</span><span class="mi">365</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">A</span> <span class="o">=</span> <span class="mi">365</span> <span class="o">/</span> <span class="p">(</span><span class="mi">364</span> <span class="n">x</span> <span class="mi">363</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="mi">365</span> <span class="o">/</span> <span class="mi">132132</span>
+<span class="n">A</span> <span class="o">=</span> <span class="mf">0.002762</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Menghitung B (dihitung langsung dari 365 data mentah):</strong></p>
+<div class="math notranslate nohighlight">
+\[ B = \sum_{i=1}^{n}\left(\frac{x_i-\bar{x}}{s}\right)^3 = \left(\frac{0.030865788 - 0.029692}{0.003717}\right)^3 + \left(\frac{0.029476058 - 0.029692}{0.003717}\right)^3 + \ldots + \left(\frac{x_n - 0.029692}{0.003717}\right)^3 \]</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>B = Σ [ (xi - x̄) / s ]³
+B = ( (0.030865788 - 0.029692) / 0.003717 )³
+  + ( (0.029476058 - 0.029692) / 0.003717 )³
+  + ( (0.028086325 - 0.029692) / 0.003717 )³
+  + ... + ( (0.03865425 - 0.029692) / 0.003717 )³
+
+B = 0.031483 + (-0.000196) + (-0.080625) + ... + 14.016881
+B = 198.375966
+</pre></div>
+</div>
+</li>
+<li><p><strong>Hasil akhir:</strong></p>
+<div class="math notranslate nohighlight">
+\[ Skewness = A \times B = 0.002762 \times 198.375966 = 0.547992 \approx 0.548 \]</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Skewness = A x B
+Skewness = 0.002762 x 198.375966
+Skewness = 0.547992 ≈ 0.548
+</pre></div>
+</div>
+</li>
+</ul>
+<p>✓ Sesuai dengan hasil node Statistics KNIME.</p>
+</section>
+<hr class="docutils" />
+<section id="kurtosis">
+<h3>5.6 Kurtosis<a class="headerlink" href="#kurtosis" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Penjelasan:</strong> Mengukur keruncingan/bobot ekor (<em>tailedness</em>) distribusi, menunjukkan
+seberapa ekstrem outlier yang ada. Software umumnya menghitung <em>Excess Kurtosis</em>.</p>
+<ul class="simple">
+<li><p><em>Kurtosis ≈ 0</em>: distribusi normal (Mesokurtik).</p></li>
+<li><p><em>Kurtosis &gt; 0</em>: puncak tajam, ekor tebal → banyak outlier ekstrem (Leptokurtik).</p></li>
+<li><p><em>Kurtosis &lt; 0</em>: puncak lebih datar dari distribusi normal (Platikurtik).</p></li>
+</ul>
+</li>
+<li><p><strong>Rumus (Excess Kurtosis, sampel):</strong></p>
+<div class="math notranslate nohighlight">
+\[ Kurtosis = \left[ \frac{n(n+1)}{(n-1)(n-2)(n-3)} \sum \left(\frac{x_i - \bar{x}}{s}\right)^4 \right] - \frac{3(n-1)^2}{(n-2)(n-3)} \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Kurtosis = [ n(n+1) / ((n-1)(n-2)(n-3)) x Σ((xi-x̄)/s)⁴ ] - [ 3(n-1)² / ((n-2)(n-3)) ]
+</pre></div>
+</div>
+<p>Rumus di atas dikelompokkan jadi 3 komponen agar mudah dihitung manual:</p>
+<div class="math notranslate nohighlight">
+\[ Kurtosis = \left[ \underbrace{\frac{n(n+1)}{(n-1)(n-2)(n-3)}}_{A} \underbrace{\sum \left(\frac{x_i - \bar{x}}{s}\right)^4}_{B} \right] - \underbrace{\frac{3(n-1)^2}{(n-2)(n-3)}}_{C} \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Kurtosis = (A x B) - C
+
+A = n(n+1) / ((n-1)(n-2)(n-3))
+B = Σ [ (xi - x̄) / s ]⁴
+C = 3(n-1)² / ((n-2)(n-3))
+</pre></div>
+</div>
+</li>
+<li><p><strong>Menghitung A:</strong></p>
+<div class="math notranslate nohighlight">
+\[ A = \frac{n(n+1)}{(n-1)(n-2)(n-3)} = \frac{365(365+1)}{(365-1)(365-2)(365-3)} = \frac{133590}{47831784} \]</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">n</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)(</span><span class="n">n</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">A</span> <span class="o">=</span> <span class="mi">365</span><span class="p">(</span><span class="mi">365</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="mi">365</span><span class="o">-</span><span class="mi">1</span><span class="p">)(</span><span class="mi">365</span><span class="o">-</span><span class="mi">2</span><span class="p">)(</span><span class="mi">365</span><span class="o">-</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mi">365</span> <span class="n">x</span> <span class="mi">366</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">364</span> <span class="n">x</span> <span class="mi">363</span> <span class="n">x</span> <span class="mi">362</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="mi">133590</span> <span class="o">/</span> <span class="mi">47831784</span>
+<span class="n">A</span> <span class="o">=</span> <span class="mf">0.002793</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Menghitung C:</strong></p>
+<div class="math notranslate nohighlight">
+\[ C = \frac{3(n-1)^2}{(n-2)(n-3)} = \frac{3(365-1)^2}{(365-2)(365-3)} = \frac{397488}{131406} \]</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>C = 3(n-1)² / ((n-2)(n-3))
+C = 3(365-1)² / ((365-2)(365-3))
+C = 3 x 364² / (363 x 362)
+C = 397488 / 131406
+C = 3.024885
+</pre></div>
+</div>
+</li>
+<li><p><strong>Menghitung B (dihitung langsung dari 365 data mentah):</strong></p>
+<div class="math notranslate nohighlight">
+\[ B = \sum_{i=1}^{n}\left(\frac{x_i-\bar{x}}{s}\right)^4 = \left(\frac{0.030865788 - 0.029692}{0.003717}\right)^4 + \left(\frac{0.029476058 - 0.029692}{0.003717}\right)^4 + \ldots + \left(\frac{x_n - 0.029692}{0.003717}\right)^4 \]</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>B = Σ [ (xi - x̄) / s ]⁴
+B = ( (0.030865788 - 0.029692) / 0.003717 )⁴
+  + ( (0.029476058 - 0.029692) / 0.003717 )⁴
+  + ( (0.028086325 - 0.029692) / 0.003717 )⁴
+  + ... + ( (0.03865425 - 0.029692) / 0.003717 )⁴
+
+B = 0.009941 + 0.0000114 + 0.034830 + ... + 33.796250
+B = 1563.418417
+</pre></div>
+</div>
+</li>
+<li><p><strong>Hasil akhir:</strong></p>
+<div class="math notranslate nohighlight">
+\[ Kurtosis = (A \times B) - C = (0.002793 \times 1563.418417) - 3.024885 = 1.341607 \approx 1.342 \]</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Kurtosis = (A x B) - C
+Kurtosis = (0.002793 x 1563.418417) - 3.024885
+Kurtosis = 4.366492 - 3.024885
+Kurtosis = 1.341607 ≈ 1.342
+</pre></div>
+</div>
+</li>
+</ul>
+<p>✓ Sesuai dengan hasil node Statistics KNIME.</p>
+</section>
+<hr class="docutils" />
+<section id="overall-sum">
+<h3>5.7 Overall Sum<a class="headerlink" href="#overall-sum" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Penjelasan:</strong> Jumlah total dari keseluruhan nilai pada kolom.</p></li>
+<li><p><strong>Rumus:</strong></p>
+<div class="math notranslate nohighlight">
+\[ Sum = \sum_{i=1}^{n} x_i \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sum</span> <span class="o">=</span> <span class="n">Σ</span> <span class="n">xi</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Substitusi angka:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sum</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">x3</span> <span class="o">+</span> <span class="o">...</span> <span class="o">+</span> <span class="n">xn</span>
+<span class="n">Sum</span> <span class="o">=</span> <span class="mf">0.030865788</span> <span class="o">+</span> <span class="mf">0.029476058</span> <span class="o">+</span> <span class="mf">0.028086325</span> <span class="o">+</span> <span class="o">...</span> <span class="o">+</span> <span class="mf">0.03865425</span>
+<span class="n">Sum</span> <span class="o">=</span> <span class="mf">10.837617</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>✓ Sesuai dengan hasil node Statistics KNIME (<code class="docutils literal notranslate"><span class="pre">Overall</span> <span class="pre">sum</span> <span class="pre">=</span> <span class="pre">10.838</span></code>).</p>
+</section>
+<hr class="docutils" />
+<section id="metrik-kualitas-anomali-data">
+<h3>5.8 Metrik Kualitas / Anomali Data<a class="headerlink" href="#metrik-kualitas-anomali-data" title="Link to this heading">#</a></h3>
+<p>Kelompok metrik ini penting terutama saat data ditarik dari API/sensor/citra satelit,
+karena rawan gagal terekam pada periode tertentu.</p>
+<ul class="simple">
+<li><p><strong>No. missings:</strong> jumlah sel kosong (<code class="docutils literal notranslate"><span class="pre">NULL</span></code>/<code class="docutils literal notranslate"><span class="pre">NA</span></code>) akibat data gagal terekam.</p></li>
+<li><p><strong>No. NaNs:</strong> jumlah entri yang terbaca tetapi tidak terdefinisi secara matematis
+(mis. hasil <code class="docutils literal notranslate"><span class="pre">0/0</span></code>).</p></li>
+<li><p><strong>No. +infs / No. -infs:</strong> jumlah nilai yang bernilai tak terhingga (positif/negatif).</p></li>
+<li><p><strong>Rumus:</strong> menghitung frekuensi (<code class="docutils literal notranslate"><span class="pre">N</span></code>) baris yang memuat nilai-nilai khusus tersebut
+untuk masing-masing kategori.</p></li>
+<li><p><strong>Contoh:</strong> Pada dataset <code class="docutils literal notranslate"><span class="pre">CO_Jombang_final.csv</span></code> ini, <code class="docutils literal notranslate"><span class="pre">No.</span> <span class="pre">missings</span> <span class="pre">=</span> <span class="pre">0</span></code> — seluruh
+365 baris terisi tanpa nilai kosong.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="median">
+<h3>5.9 Median<a class="headerlink" href="#median" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Penjelasan:</strong> Nilai tengah data setelah diurutkan. Lebih tahan terhadap pengaruh
+outlier dibanding Mean, sehingga sering dipakai sebagai alternatif ringkasan pusat data.</p></li>
+<li><p><strong>Rumus:</strong> Urutkan data <code class="docutils literal notranslate"><span class="pre">X1</span></code> sampai <code class="docutils literal notranslate"><span class="pre">Xn</span></code>:</p>
+<div class="math notranslate nohighlight">
+\[ n \text{ ganjil} \Rightarrow Median = X_{(n+1)/2} \]</div>
+<div class="math notranslate nohighlight">
+\[ n \text{ genap} \Rightarrow Median = \frac{X_{n/2} + X_{(n/2)+1}}{2} \]</div>
+<p>Versi teks biasa:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>n ganjil → Median = X((n+1)/2)
+n genap  → Median = ( X(n/2) + X(n/2 + 1) ) / 2
+</pre></div>
+</div>
+</li>
+<li><p><strong>Substitusi angka:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">365</span> <span class="p">(</span><span class="n">ganjil</span><span class="p">)</span>
+<span class="n">Posisi</span> <span class="n">tengah</span> <span class="o">=</span> <span class="p">(</span><span class="mi">365</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">=</span> <span class="mi">183</span>
+
+<span class="n">Median</span> <span class="o">=</span> <span class="n">X183</span> <span class="p">(</span><span class="n">data</span> <span class="n">urutan</span> <span class="n">ke</span><span class="o">-</span><span class="mi">183</span> <span class="n">setelah</span> <span class="n">diurutkan</span><span class="p">)</span>
+<span class="n">Median</span> <span class="o">=</span> <span class="mf">0.029194</span>
+</pre></div>
+</div>
+<p>Median (0.029194) hampir sama dengan Mean (0.029692) → menandakan distribusi
+data <code class="docutils literal notranslate"><span class="pre">CO</span></code> relatif tidak terlalu diseret jauh oleh outlier ekstrem.</p>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./data_understanding"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Data Understanding</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../markdown.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Markdown Files</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-kerja">1. Ringkasan Alur Kerja</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-a-migrasi-data-time-series-ke-postgresql-aiven">2. Bagian A — Migrasi Data Time Series ke PostgreSQL Aiven</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-layanan-aiven-postgresql">2.1 Persiapan Layanan Aiven PostgreSQL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#membuat-tabel-time-series-polutan">2.2 Membuat Tabel Time Series Polutan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#migrasi-data-ke-aiven-postgresql-import-via-pgadmin-4">2.3 Migrasi Data ke Aiven PostgreSQL (Import via pgAdmin 4)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspeksi-data-via-pgadmin-4">3. Inspeksi Data via pgAdmin 4</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#registrasi-koneksi-server">3.1 Registrasi Koneksi Server</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspeksi-tabel-data">3.2 Inspeksi Tabel Data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menarik-data-dari-aiven-postgresql-ke-knime">4. Menarik Data dari Aiven PostgreSQL ke KNIME</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-driver-jdbc">4.1 Persiapan Driver JDBC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#node-yang-digunakan">4.2 Node yang Digunakan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#konfigurasi-node">4.3 Konfigurasi Node</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-metrik-node-statistics-rumus-contoh-perhitungan">5. Penjelasan Metrik Node Statistics: Rumus &amp; Contoh Perhitungan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#min-max">5.1 Min &amp; Max</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean">5.2 Mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#std-deviation-standar-deviasi">5.3 Std. Deviation (Standar Deviasi)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-varians">5.4 Variance (Varians)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skewness">5.5 Skewness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kurtosis">5.6 Kurtosis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overall-sum">5.7 Overall Sum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metrik-kualitas-anomali-data">5.8 Metrik Kualitas / Anomali Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#median">5.9 Median</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

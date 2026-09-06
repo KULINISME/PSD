@@ -6,5 +6,6 @@ root: intro
 chapters:
 - file: business/intro
 - file: data_understanding/intro
+- file: data_understanding/matrix
 - file: markdown
 - file: markdown-notebooks
