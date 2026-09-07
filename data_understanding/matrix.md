@@ -134,6 +134,7 @@ Node **Statistics** KNIME menghasilkan ringkasan untuk tiap kolom polutan (`no2`
 `so2`). Berikut penjelasan setiap metrik, rumus, dan contoh perhitungannya —
 dihitung **langsung dari 365 data mentah** kolom `CO` (`CO_Jombang_final.csv`),
 bukan lagi estimasi/reverse-engineering:
+![Node knime](../img/co_stats.png)
 
 ```
 n = 365 | Missing values = 0
