@@ -7,5 +7,7 @@ chapters:
 - file: business/intro
 - file: data_understanding/intro
 - file: data_understanding/matrix
+- file: data_prepocessing/intro
+- file: data_prepocessing/preprocessing
 - file: markdown
 - file: markdown-notebooks
