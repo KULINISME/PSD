@@ -57,6 +57,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'data_prepocessing/preprocessing';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -185,6 +187,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_understanding/matrix.html">Dokumentasi: Migrasi Data Time Series Polutan ke Aiven PostgreSQL &amp; Analisis Statistik Deskriptif di KNIME</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Data Preprocessing</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Pra-Pemrosesan Data Kewilayahan Kecamatan Jogoroto dan Ekstraksi 68 Fitur TSFEL</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="../markdown.html">Markdown Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
 </ul>
@@ -382,6 +385,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Pra-Pemrosesan Data Kewilayahan Kecamatan Jogoroto dan Ekstraksi 68 Fitur TSFEL</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing-penanganan-outliers-dan-interpolasi-data">1. Preprocessing: Penanganan Outliers dan Interpolasi Data</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dengan-metode-iqr">Deteksi Outlier dengan Metode IQR</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-outlier">Visualisasi Outlier</a></li>
@@ -389,19 +393,24 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-setelah-cleaning-dan-interpolasi">Hasil Setelah Cleaning dan Interpolasi</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ekstraksi-68-fitur-dengan-tsfel">2. Ekstraksi 68 Fitur dengan TSFEL</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ekstraksi-68-fitur-dengan-tsfel">2. Ekstraksi 68 Fitur dengan TSFEL</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-tsfel-time-series-feature-extraction-library">68 Fitur TSFEL (Time Series Feature Extraction Library)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-statistik-21-fitur">1. Domain Statistik (21 fitur)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-temporal-15-fitur">2. Domain Temporal (15 fitur)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-spektral-26-fitur">3. Domain Spektral (26 fitur)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-fraktal-6-fitur">4. Domain Fraktal (6 fitur)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sumber">Sumber</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-ekstraksi-fitur">Langkah Ekstraksi Fitur</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-ekstraksi-fitur">Hasil Ekstraksi Fitur</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengelompokan-domain-fitur-tsfel">3. Pengelompokan Domain Fitur TSFEL</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-domain-statistical-statistik">A. Domain Statistical (Statistik)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-domain-temporal-waktu">B. Domain Temporal (Waktu)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-domain-spectral-frekuensi">C. Domain Spectral (Frekuensi)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-singkat">5. Penjelasan Singkat</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-singkat">4. Penjelasan Singkat</a></li>
 </ul>
+
             </nav>
         </div>
     </div>
@@ -548,78 +557,502 @@ document.write(`
 <section id="ekstraksi-68-fitur-dengan-tsfel">
 <h2>2. Ekstraksi 68 Fitur dengan TSFEL<a class="headerlink" href="#ekstraksi-68-fitur-dengan-tsfel" title="Link to this heading">#</a></h2>
 <p>Data deret waktu yang sudah bersih lalu diproses menggunakan library <code class="docutils literal notranslate"><span class="pre">tsfel</span></code> untuk menghasilkan fitur-fitur representatif. Pada tahap ini, saya mengekstraksi sebanyak 68 fitur dari deret waktu <code class="docutils literal notranslate"><span class="pre">NO2</span></code>, yang kemudian dapat dijadikan input untuk analisis lanjutan seperti klasifikasi, prediksi, atau pemodelan machine learning.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="fitur-tsfel-time-series-feature-extraction-library">
+<h1>68 Fitur TSFEL (Time Series Feature Extraction Library)<a class="headerlink" href="#fitur-tsfel-time-series-feature-extraction-library" title="Link to this heading">#</a></h1>
+<p>TSFEL mengelompokkan fiturnya ke dalam 4 domain: <strong>Statistik</strong> (21 fitur), <strong>Temporal</strong> (15 fitur), <strong>Spektral</strong> (26 fitur), dan <strong>Fraktal</strong> (6 fitur) — total <strong>68 fitur</strong>. Domain fraktal secara default tidak diaktifkan pada konfigurasi bawaan TSFEL, namun tetap tersedia di library.</p>
+<p>Notasi umum:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x = [x_1, x_2, \dots, x_N]\)</span> = sinyal/jendela data dengan <span class="math notranslate nohighlight">\(N\)</span> titik</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu\)</span> = rata-rata sinyal, <span class="math notranslate nohighlight">\(\sigma\)</span> = standar deviasi sinyal</p></li>
+<li><p><span class="math notranslate nohighlight">\(f_s\)</span> = frekuensi sampling, <span class="math notranslate nohighlight">\(t_i\)</span> = waktu sampel ke-<span class="math notranslate nohighlight">\(i\)</span> (<span class="math notranslate nohighlight">\(t_i = i/f_s\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(X(f)\)</span> = magnitudo spektrum hasil FFT pada frekuensi <span class="math notranslate nohighlight">\(f\)</span></p></li>
+</ul>
+<hr class="docutils" />
+<section id="domain-statistik-21-fitur">
+<h2>1. Domain Statistik (21 fitur)<a class="headerlink" href="#domain-statistik-21-fitur" title="Link to this heading">#</a></h2>
+<p>Fitur statistik meringkas sinyal menggunakan statistik deskriptif (tidak bergantung pada urutan data).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>Nama Fitur</p></th>
+<th class="head"><p>Rumus</p></th>
+<th class="head"><p>Deskripsi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">abs_energy</span></code> (Absolute Energy)</p></td>
+<td><p><span class="math notranslate nohighlight">\(E = \sum_{i=1}^{N} x_i^2\)</span></p></td>
+<td><p>Jumlah kuadrat seluruh nilai sinyal; menunjukkan total energi mentah sinyal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">average_power</span></code> (Average Power)</p></td>
+<td><p><span class="math notranslate nohighlight">\(P = \dfrac{\sum x_i^2}{T}\)</span>, <span class="math notranslate nohighlight">\(T\)</span> = durasi sinyal (detik)</p></td>
+<td><p>Energi sinyal dibagi durasi waktu total; daya rata-rata sinyal.</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">calc_max</span></code> (Maximum)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\max(x)\)</span></p></td>
+<td><p>Nilai maksimum sinyal dalam jendela.</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">calc_mean</span></code> (Mean)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu = \dfrac{1}{N}\sum_{i=1}^{N} x_i\)</span></p></td>
+<td><p>Rata-rata aritmetika nilai sinyal.</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">calc_median</span></code> (Median)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{median}(x)\)</span></p></td>
+<td><p>Nilai tengah sinyal setelah diurutkan.</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">calc_min</span></code> (Minimum)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\min(x)\)</span></p></td>
+<td><p>Nilai minimum sinyal dalam jendela.</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">calc_std</span></code> (Standard Deviation)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sigma = \sqrt{\dfrac{1}{N}\sum_{i=1}^{N} (x_i-\mu)^2}\)</span></p></td>
+<td><p>Ukuran sebaran nilai sinyal di sekitar rata-rata.</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">calc_var</span></code> (Variance)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sigma^2 = \dfrac{1}{N}\sum_{i=1}^{N} (x_i-\mu)^2\)</span></p></td>
+<td><p>Kuadrat dari standar deviasi; ukuran variabilitas sinyal.</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ecdf</span></code> (Empirical CDF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(F(x) = \dfrac{1}{N}\,\#\{x_i \le x\}\)</span></p></td>
+<td><p>Nilai fungsi distribusi kumulatif empiris sinyal pada sejumlah titik sepanjang sumbu waktu.</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ecdf_percentile</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(x_p\)</span> sehingga <span class="math notranslate nohighlight">\(F(x_p) = p\)</span></p></td>
+<td><p>Nilai sinyal pada persentil tertentu dari ECDF (default <span class="math notranslate nohighlight">\(p = 0{,}2\)</span> dan <span class="math notranslate nohighlight">\(0{,}8\)</span>).</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ecdf_percentile_count</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\#\{x_i \le x_p\}\)</span></p></td>
+<td><p>Jumlah kumulatif sampel yang berada di bawah nilai persentil tertentu.</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ecdf_slope</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(m = \dfrac{p_{end}-p_{init}}{x(p_{end})-x(p_{init})}\)</span></p></td>
+<td><p>Kemiringan ECDF antara dua persentil (default <span class="math notranslate nohighlight">\(0{,}5\)</span> dan <span class="math notranslate nohighlight">\(0{,}75\)</span>).</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">entropy</span></code> (Shannon Entropy)</p></td>
+<td><p><span class="math notranslate nohighlight">\(H = -\dfrac{\sum_i p_i \log_2 p_i}{\log_2 N}\)</span></p></td>
+<td><p>Entropi Shannon ternormalisasi dari distribusi probabilitas nilai sinyal; ukuran keacakan/ketidakpastian.</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hist_mode</span></code> (Histogram Mode)</p></td>
+<td><p>titik tengah bin histogram dengan frekuensi tertinggi</p></td>
+<td><p>Nilai yang paling sering muncul berdasarkan histogram sinyal (default 10 bin).</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">interq_range</span></code> (IQR)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{IQR} = Q_3 - Q_1\)</span></p></td>
+<td><p>Selisih antara kuartil ke-3 dan kuartil ke-1; ukuran sebaran yang tahan outlier.</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">kurtosis</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\kappa = \dfrac{E[(x-\mu)^4]}{\sigma^4} - 3\)</span></p></td>
+<td><p>Mengukur “keruncingan” (tailedness) distribusi sinyal dibanding distribusi normal.</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mean_abs_deviation</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{MAD}_{mean} = \dfrac{1}{N}\sum_i \lvert x_i-\mu\rvert\)</span></p></td>
+<td><p>Rata-rata deviasi absolut nilai sinyal terhadap rata-ratanya.</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">median_abs_deviation</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{MAD}_{med} = \mathrm{median}(\lvert x_i-\mathrm{median}(x)\rvert)\)</span></p></td>
+<td><p>Median dari deviasi absolut terhadap median; ukuran sebaran yang robust terhadap outlier.</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pk_pk_distance</span></code> (Peak to Peak)</p></td>
+<td><p><span class="math notranslate nohighlight">\(PP = \max(x) - \min(x)\)</span></p></td>
+<td><p>Selisih antara nilai maksimum dan minimum sinyal (rentang amplitudo).</p></td>
+</tr>
+<tr class="row-odd"><td><p>20</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rms</span></code> (Root Mean Square)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{RMS} = \sqrt{\dfrac{1}{N}\sum_{i=1}^{N} x_i^2}\)</span></p></td>
+<td><p>Akar dari rata-rata kuadrat sinyal; representasi magnitudo energetik sinyal (contoh: RMS <span class="math notranslate nohighlight">\(\approx 2{,}607\)</span> pada slide 8).</p></td>
+</tr>
+<tr class="row-even"><td><p>21</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">skewness</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\gamma = \dfrac{E[(x-\mu)^3]}{\sigma^3}\)</span></p></td>
+<td><p>Mengukur asimetri (kemiringan) distribusi nilai sinyal terhadap rata-ratanya.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="domain-temporal-15-fitur">
+<h2>2. Domain Temporal (15 fitur)<a class="headerlink" href="#domain-temporal-15-fitur" title="Link to this heading">#</a></h2>
+<p>Fitur temporal menganalisis dinamika dan perubahan nilai sinyal seiring waktu (sensitif terhadap urutan data).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>Nama Fitur</p></th>
+<th class="head"><p>Rumus</p></th>
+<th class="head"><p>Deskripsi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>22</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">auc</span></code> (Area Under the Curve)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{AUC} = \sum_{i} \tfrac{1}{2}(t_{i+1}-t_i)\,\lvert x_i+x_{i+1}\rvert\)</span></p></td>
+<td><p>Luas area di bawah kurva sinyal dihitung dengan aturan trapesium.</p></td>
+</tr>
+<tr class="row-odd"><td><p>23</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">autocorr</span></code> (Autocorrelation)</p></td>
+<td><p>lag pertama saat <span class="math notranslate nohighlight">\(\mathrm{ACF}(\text{lag}) &lt; 1/e\;(\approx 0{,}3679)\)</span></p></td>
+<td><p>Lag waktu pertama di mana fungsi autokorelasi sinyal turun di bawah <span class="math notranslate nohighlight">\(1/e\)</span>; menunjukkan skala waktu ketergantungan diri sinyal.</p></td>
+</tr>
+<tr class="row-even"><td><p>24</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">calc_centroid</span></code> (Temporal Centroid)</p></td>
+<td><p><span class="math notranslate nohighlight">\(C = \dfrac{\sum_i t_i\,x_i^2}{\sum_i x_i^2}\)</span></p></td>
+<td><p>“Pusat massa” sinyal pada sumbu waktu, dibobotkan oleh energi (kuadrat amplitudo) di setiap titik.</p></td>
+</tr>
+<tr class="row-odd"><td><p>25</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">distance</span></code> (Signal Distance)</p></td>
+<td><p><span class="math notranslate nohighlight">\(D = \sum_i \sqrt{1+(x_{i+1}-x_i)^2}\)</span></p></td>
+<td><p>Total jarak tempuh sinyal, dihitung dari hipotenusa antar titik data berurutan.</p></td>
+</tr>
+<tr class="row-even"><td><p>26</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lempel_ziv</span></code> (LZ Complexity)</p></td>
+<td><p>indeks LZ dari sinyal biner (threshold default = <span class="math notranslate nohighlight">\(\mu\)</span>), dinormalisasi thd panjang sinyal</p></td>
+<td><p>Indeks kompleksitas Lempel-Ziv; mengukur tingkat keberagaman pola/kompleksitas sinyal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>27</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mean_abs_diff</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{MAD} = \dfrac{1}{N-1}\sum_i \lvert x_{i+1}-x_i\rvert\)</span></p></td>
+<td><p>Rata-rata perubahan absolut antar sampel berurutan (contoh: MAD <span class="math notranslate nohighlight">\(=4{,}5\)</span> pada slide 12).</p></td>
+</tr>
+<tr class="row-even"><td><p>28</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mean_diff</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\dfrac{1}{N-1}\sum_i (x_{i+1}-x_i)\)</span></p></td>
+<td><p>Rata-rata selisih (bertanda) antar sampel berurutan; menunjukkan tren naik/turun rata-rata.</p></td>
+</tr>
+<tr class="row-odd"><td><p>29</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">median_abs_diff</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{median}(\lvert x_{i+1}-x_i\rvert)\)</span></p></td>
+<td><p>Median dari perubahan absolut antar sampel berurutan.</p></td>
+</tr>
+<tr class="row-even"><td><p>30</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">median_diff</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{median}(x_{i+1}-x_i)\)</span></p></td>
+<td><p>Median dari selisih (bertanda) antar sampel berurutan.</p></td>
+</tr>
+<tr class="row-odd"><td><p>31</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">negative_turning</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\#\{i : \text{pola naik}\to\text{turun}\}\)</span></p></td>
+<td><p>Jumlah titik balik negatif (puncak lokal yang berubah arah menurun) pada sinyal.</p></td>
+</tr>
+<tr class="row-even"><td><p>32</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">neighbourhood_peaks</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\#\{i : x_i &gt; x_{i\pm 1},\dots,x_{i\pm n}\}\)</span></p></td>
+<td><p>Jumlah puncak (peak) yang terdeteksi dalam suatu lingkungan bertetangga sepanjang sinyal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>33</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">positive_turning</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\#\{i : \text{pola turun}\to\text{naik}\}\)</span></p></td>
+<td><p>Jumlah titik balik positif (lembah lokal yang berubah arah naik) pada sinyal.</p></td>
+</tr>
+<tr class="row-even"><td><p>34</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">slope</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(m\)</span> dari regresi linear <span class="math notranslate nohighlight">\(x(t) = m\,t+b\)</span></p></td>
+<td><p>Kemiringan garis linear yang paling sesuai (least squares) terhadap data sinyal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>35</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sum_abs_diff</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum_i \lvert x_{i+1}-x_i\rvert\)</span></p></td>
+<td><p>Jumlah total perubahan absolut antar sampel berurutan sepanjang sinyal.</p></td>
+</tr>
+<tr class="row-even"><td><p>36</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zero_cross</span></code> (ZCR)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\#\{i : \mathrm{sign}(x_{i+1}) \neq \mathrm{sign}(x_i)\}\)</span></p></td>
+<td><p>Jumlah transisi sinyal dari positif ke negatif atau sebaliknya (contoh: ZCR <span class="math notranslate nohighlight">\(=4\)</span> pada slide 10).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="domain-spektral-26-fitur">
+<h2>3. Domain Spektral (26 fitur)<a class="headerlink" href="#domain-spektral-26-fitur" title="Link to this heading">#</a></h2>
+<p>Fitur spektral menganalisis komposisi frekuensi sinyal, umumnya setelah transformasi Fourier (FFT). <span class="math notranslate nohighlight">\(X(f)\)</span> menyatakan magnitudo spektrum pada frekuensi <span class="math notranslate nohighlight">\(f\)</span>.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>Nama Fitur</p></th>
+<th class="head"><p>Rumus</p></th>
+<th class="head"><p>Deskripsi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>37</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fundamental_frequency</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_0 = \min\{f : X(f) \text{ puncak signifikan}, X(f) &gt; 0{,}3\max X\}\)</span></p></td>
+<td><p>Frekuensi dasar (fundamental) yang paling mewakili konten utama spektrum sinyal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>38</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">human_range_energy</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\dfrac{E_{0,6-2,5\,\text{Hz}}}{E_{total}}\)</span></p></td>
+<td><p>Rasio energi sinyal pada rentang frekuensi gerak manusia (0,6–2,5 Hz) terhadap energi total spektrum.</p></td>
+</tr>
+<tr class="row-even"><td><p>39</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lpcc</span></code> (Linear Prediction Cepstral Coeff.)</p></td>
+<td><p>koefisien cepstral dari koefisien LPC via rekursi cepstral</p></td>
+<td><p>Koefisien yang menggambarkan karakteristik spektral sinyal berdasarkan model prediksi linear (umum pada pengolahan suara).</p></td>
+</tr>
+<tr class="row-odd"><td><p>40</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">max_frequency</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(f\)</span> dengan <span class="math notranslate nohighlight">\(\mathrm{cumsum}(X(f)) = 0{,}95 \sum X(f)\)</span></p></td>
+<td><p>Batas frekuensi atas di mana 95% energi spektrum sinyal sudah terkandung.</p></td>
+</tr>
+<tr class="row-even"><td><p>41</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">max_power_spectrum</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\max[\mathrm{PSD}(f)]\)</span> (metode Welch)</p></td>
+<td><p>Nilai puncak dari kerapatan spektrum daya (Power Spectral Density) sinyal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>42</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(f\)</span> dengan <span class="math notranslate nohighlight">\(\mathrm{cumsum}(X(f)) = 0{,}50 \sum X(f)\)</span></p></td>
+<td><p>Frekuensi tengah (median) dari distribusi energi spektral sinyal.</p></td>
+</tr>
+<tr class="row-even"><td><p>43</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mfcc</span></code> (Mel-Freq. Cepstral Coeff.)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{DCT}\big(\log(\text{energi filterbank Mel})\big)\)</span></p></td>
+<td><p>Koefisien cepstral berskala Mel yang merepresentasikan distribusi daya pada tiap pita frekuensi, umum untuk audio.</p></td>
+</tr>
+<tr class="row-odd"><td><p>44</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">power_bandwidth</span></code></p></td>
+<td><p>lebar pita frekuensi yang memuat 95% daya spektrum</p></td>
+<td><p>Lebar pita (bandwidth) tempat sebagian besar (95%) daya sinyal terkonsentrasi.</p></td>
+</tr>
+<tr class="row-even"><td><p>45</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_centroid</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(C = \dfrac{\sum_f f\,X(f)}{\sum_f X(f)}\)</span></p></td>
+<td><p>“Pusat gravitasi” spektrum frekuensi; berkorelasi dengan persepsi kecerahan/brightness sinyal (contoh: Centroid <span class="math notranslate nohighlight">\(=1{,}25\)</span> pada slide 24).</p></td>
+</tr>
+<tr class="row-odd"><td><p>46</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_decrease</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{SDec} = \dfrac{1}{\sum_{k=2}^{N} X(k)} \sum_{k=2}^{N} \dfrac{X(k)-X(1)}{k-1}\)</span></p></td>
+<td><p>Menggambarkan seberapa cepat amplitudo spektrum menurun terhadap frekuensi.</p></td>
+</tr>
+<tr class="row-even"><td><p>47</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_distance</span></code></p></td>
+<td><p>jarak antara <span class="math notranslate nohighlight">\(\mathrm{cumsum}(X(f))\)</span> dan garis regresi liniernya</p></td>
+<td><p>Jarak antara kumulatif spektrum FFT sinyal dan garis regresi liniernya; menunjukkan penyimpangan bentuk spektrum dari linier.</p></td>
+</tr>
+<tr class="row-odd"><td><p>48</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_entropy</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(H = -\dfrac{\sum_f p_f \log_2 p_f}{\log_2 N}\)</span>, <span class="math notranslate nohighlight">\(p_f = \dfrac{X(f)}{\sum X(f)}\)</span></p></td>
+<td><p>Entropi Shannon dari spektrum daya sinyal; mengukur keacakan/kompleksitas kandungan frekuensi (contoh: <span class="math notranslate nohighlight">\(1{,}469\)</span> bit pada slide 22).</p></td>
+</tr>
+<tr class="row-even"><td><p>49</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_kurtosis</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\kappa_{spec} = \dfrac{\sum_f (f-C)^4 X(f)}{\sum_f X(f)\cdot \mathrm{spread}^4}\)</span></p></td>
+<td><p>Mengukur “keruncingan” distribusi spektrum di sekitar centroid-nya.</p></td>
+</tr>
+<tr class="row-odd"><td><p>50</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_positive_turning</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\#\{f : \text{titik balik positif pada } \lvert X(f)\rvert\}\)</span></p></td>
+<td><p>Jumlah titik balik naik pada sinyal magnitudo spektrum (FFT).</p></td>
+</tr>
+<tr class="row-even"><td><p>51</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_roll_off</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(f\)</span> dengan 95% magnitudo spektrum berada <span class="math notranslate nohighlight">\(\le f\)</span></p></td>
+<td><p>Frekuensi ambang di mana 95% dari total magnitudo spektrum sudah terlingkupi.</p></td>
+</tr>
+<tr class="row-odd"><td><p>52</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_roll_on</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(f\)</span> dengan 5% magnitudo spektrum berada <span class="math notranslate nohighlight">\(\le f\)</span></p></td>
+<td><p>Frekuensi ambang bawah di mana baru 5% dari total magnitudo spektrum terlingkupi.</p></td>
+</tr>
+<tr class="row-even"><td><p>53</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_skewness</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\gamma_{spec} = \dfrac{\sum_f (f-C)^3 X(f)}{\sum_f X(f)\cdot \mathrm{spread}^3}\)</span></p></td>
+<td><p>Mengukur asimetri distribusi spektrum di sekitar centroid-nya.</p></td>
+</tr>
+<tr class="row-odd"><td><p>54</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_slope</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(m\)</span> dari regresi linear <span class="math notranslate nohighlight">\(X(f) = m f + b\)</span></p></td>
+<td><p>Kemiringan garis linear terhadap amplitudo spektral sepanjang frekuensi.</p></td>
+</tr>
+<tr class="row-even"><td><p>55</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_spread</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{spread} = \sqrt{\dfrac{\sum_f (f-C)^2 X(f)}{\sum_f X(f)}}\)</span></p></td>
+<td><p>Standar deviasi/sebaran spektrum di sekitar centroid-nya; lebar “pita” tempat energi terkonsentrasi.</p></td>
+</tr>
+<tr class="row-odd"><td><p>56</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectral_variation</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(1 - \dfrac{\sum_f X_t(f)X_{t-1}(f)}{\sqrt{\sum_f X_t(f)^2}\sqrt{\sum_f X_{t-1}(f)^2}}\)</span></p></td>
+<td><p>Jumlah variasi spektrum antar-waktu, dihitung dari korelasi silang ternormalisasi antara spektrum amplitudo yang berurutan.</p></td>
+</tr>
+<tr class="row-even"><td><p>57</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spectrogram_mean_coeff</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\overline{\mathrm{PSD}}(f) = \dfrac{1}{T}\sum_t \mathrm{PSD}_t(f)\)</span></p></td>
+<td><p>Rata-rata kerapatan spektrum daya untuk tiap bin frekuensi, dihitung dari spektrogram sinyal penuh.</p></td>
+</tr>
+<tr class="row-odd"><td><p>58</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wavelet_abs_mean</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{mean}(\lvert \mathrm{CWT}_{scale}\rvert)\)</span></p></td>
+<td><p>Nilai rata-rata absolut dari hasil Continuous Wavelet Transform (CWT) pada tiap skala wavelet.</p></td>
+</tr>
+<tr class="row-even"><td><p>59</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wavelet_energy</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum (\mathrm{CWT}_{scale})^2\)</span></p></td>
+<td><p>Energi hasil transformasi wavelet kontinu (CWT) pada tiap skala.</p></td>
+</tr>
+<tr class="row-odd"><td><p>60</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wavelet_entropy</span></code></p></td>
+<td><p>entropi Shannon dari distribusi energi antar skala wavelet</p></td>
+<td><p>Entropi dari distribusi energi CWT di seluruh skala wavelet; ukuran kompleksitas sinyal dalam domain waktu-skala.</p></td>
+</tr>
+<tr class="row-even"><td><p>61</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wavelet_std</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{std}(\mathrm{CWT}_{scale})\)</span></p></td>
+<td><p>Standar deviasi dari hasil CWT pada tiap skala wavelet.</p></td>
+</tr>
+<tr class="row-odd"><td><p>62</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wavelet_var</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{var}(\mathrm{CWT}_{scale})\)</span></p></td>
+<td><p>Variansi dari hasil CWT pada tiap skala wavelet.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="domain-fraktal-6-fitur">
+<h2>4. Domain Fraktal (6 fitur)<a class="headerlink" href="#domain-fraktal-6-fitur" title="Link to this heading">#</a></h2>
+<p>Fitur fraktal mengukur kompleksitas/self-similarity sinyal, biasanya diterapkan pada sinyal yang relatif panjang (domain ini nonaktif secara default di TSFEL).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>Nama Fitur</p></th>
+<th class="head"><p>Rumus</p></th>
+<th class="head"><p>Deskripsi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>63</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dfa</span></code> (Detrended Fluctuation Analysis)</p></td>
+<td><p><span class="math notranslate nohighlight">\(F(n) \propto n^{\alpha}\)</span></p></td>
+<td><p>Eksponen skala <span class="math notranslate nohighlight">\(\alpha\)</span> dari analisis fluktuasi ter-detrend; mengukur korelasi jangka panjang dalam sinyal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">higuchi_fractal_dimension</span></code> (HFD)</p></td>
+<td><p><span class="math notranslate nohighlight">\(L(k) \propto k^{-D}\)</span></p></td>
+<td><p>Dimensi fraktal <span class="math notranslate nohighlight">\(D\)</span> sinyal, dihitung dari kemiringan hubungan panjang kurva <span class="math notranslate nohighlight">\(L(k)\)</span> terhadap skala <span class="math notranslate nohighlight">\(k\)</span> (metode Higuchi).</p></td>
+</tr>
+<tr class="row-even"><td><p>65</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hurst_exponent</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\dfrac{R}{S} \propto n^{H}\)</span></p></td>
+<td><p>Eksponen Hurst <span class="math notranslate nohighlight">\(H\)</span> dari analisis Rescaled Range (R/S); menunjukkan sifat persistensi/anti-persistensi deret waktu.</p></td>
+</tr>
+<tr class="row-odd"><td><p>66</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">maximum_fractal_length</span></code> (MFL)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{MFL} = \log\big(\overline{L(k_{min})}\big)\)</span></p></td>
+<td><p>Panjang fraktal maksimum; rata-rata panjang kurva pada skala terkecil dari plot logaritmik penentu dimensi fraktal (metode Higuchi).</p></td>
+</tr>
+<tr class="row-even"><td><p>67</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mse</span></code> (Multiscale Entropy)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{MSE}_{area} = \dfrac{1}{K}\sum_{s=1}^{K} \mathrm{SampEn}(s)\)</span></p></td>
+<td><p>Analisis entropi sinyal pada berbagai skala waktu (coarse-graining), menghasilkan luas area ternormalisasi di bawah kurva MSE.</p></td>
+</tr>
+<tr class="row-odd"><td><p>68</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">petrosian_fractal_dimension</span></code> (PFD)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{PFD} = \dfrac{\log_{10} N}{\log_{10} N + \log_{10}\!\left(\dfrac{N}{N+0{,}4\,N_\Delta}\right)}\)</span></p></td>
+<td><p>Dimensi fraktal Petrosian, dihitung cepat dari jumlah perubahan arah turunan sinyal <span class="math notranslate nohighlight">\(N_\Delta\)</span>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<section id="sumber">
+<h3>Sumber<a class="headerlink" href="#sumber" title="Link to this heading">#</a></h3>
+<p>Daftar dan klasifikasi domain fitur disusun berdasarkan dokumentasi resmi TSFEL 0.2.0 (<a class="reference external" href="http://tsfel.readthedocs.io">tsfel.readthedocs.io</a>) dan source code <code class="docutils literal notranslate"><span class="pre">tsfel/feature_extraction/features.py</span></code> (fraunhoferportugal/tsfel). Notasi rumus ditulis ulang dalam bentuk LaTeX standar, bukan salinan kode sumber.</p>
+</section>
 <section id="langkah-ekstraksi-fitur">
 <h3>Langkah Ekstraksi Fitur<a class="headerlink" href="#langkah-ekstraksi-fitur" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tsfel.feature_extraction.features</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tsfel_features</span>
+<div class="highlight-code-cell notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+import numpy as np
+import inspect
+import tsfel.feature_extraction.features as tsfel_features
 
-<span class="c1"># Muat data hasil preprocessing</span>
+# Muat data hasil preprocessing
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../file/NO2_Jogoroto_filled.csv&#39;</span><span class="p">)</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+df = pd.read_csv(&#39;../file/NO2_Jogoroto_filled.csv&#39;)
+df[&#39;date&#39;] = pd.to_datetime(df[&#39;date&#39;])
+df = df.sort_values(&#39;date&#39;).reset_index(drop=True)
 
-<span class="c1"># Target kolom</span>
+# Target kolom
 
-<span class="n">target_pollutant</span> <span class="o">=</span> <span class="s1">&#39;NO2&#39;</span>
+target_pollutant = &#39;NO2&#39;
 
-<span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+df[target_pollutant] = pd.to_numeric(df[target_pollutant], errors=&#39;coerce&#39;)
 
-<span class="c1"># Tetap pastikan data bersih dan urut berdasarkan waktu</span>
+# Tetap pastikan data bersih dan urut berdasarkan waktu
 
-<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span><span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
-<span class="n">fs</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">signal_1d</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+df_clean = df.set_index(&#39;date&#39;).interpolate(method=&#39;time&#39;).ffill().bfill()
+fs = 1
+signal_1d = df_clean[target_pollutant].astype(float).values
 
-<span class="c1"># 68 fitur TSFEL</span>
-<span class="n">FEATURE_LIST</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;abs_energy auc autocorr average_power calc_centroid calc_max calc_mean</span>
-<span class="s2">calc_median calc_min calc_std calc_var dfa distance ecdf ecdf_percentile ecdf_percentile_count</span>
-<span class="s2">ecdf_slope entropy fundamental_frequency higuchi_fractal_dimension hist_mode human_range_energy</span>
-<span class="s2">hurst_exponent interq_range kurtosis lempel_ziv lpcc max_frequency max_power_spectrum</span>
-<span class="s2">maximum_fractal_length mean_abs_deviation mean_abs_diff mean_diff median_abs_deviation</span>
-<span class="s2">median_abs_diff median_diff median_frequency mfcc mse negative_turning neighbourhood_peaks</span>
-<span class="s2">petrosian_fractal_dimension pk_pk_distance positive_turning power_bandwidth rms skewness slope</span>
-<span class="s2">spectral_centroid spectral_decrease spectral_distance spectral_entropy spectral_kurtosis</span>
-<span class="s2">spectral_positive_turning spectral_roll_off spectral_roll_on spectral_skewness spectral_slope</span>
-<span class="s2">spectral_spread spectral_variation spectrogram_mean_coeff sum_abs_diff wavelet_abs_mean</span>
-<span class="s2">wavelet_energy wavelet_entropy wavelet_std wavelet_var zero_cross&quot;&quot;&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+# 68 fitur TSFEL
+FEATURE_LIST = &quot;&quot;&quot;abs_energy auc autocorr average_power calc_centroid calc_max calc_mean
+calc_median calc_min calc_std calc_var dfa distance ecdf ecdf_percentile ecdf_percentile_count
+ecdf_slope entropy fundamental_frequency higuchi_fractal_dimension hist_mode human_range_energy
+hurst_exponent interq_range kurtosis lempel_ziv lpcc max_frequency max_power_spectrum
+maximum_fractal_length mean_abs_deviation mean_abs_diff mean_diff median_abs_deviation
+median_abs_diff median_diff median_frequency mfcc mse negative_turning neighbourhood_peaks
+petrosian_fractal_dimension pk_pk_distance positive_turning power_bandwidth rms skewness slope
+spectral_centroid spectral_decrease spectral_distance spectral_entropy spectral_kurtosis
+spectral_positive_turning spectral_roll_off spectral_roll_on spectral_skewness spectral_slope
+spectral_spread spectral_variation spectrogram_mean_coeff sum_abs_diff wavelet_abs_mean
+wavelet_energy wavelet_entropy wavelet_std wavelet_var zero_cross&quot;&quot;&quot;.split()
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Jumlah fitur yang diproses:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">FEATURE_LIST</span><span class="p">))</span>
+print(&#39;Jumlah fitur yang diproses:&#39;, len(FEATURE_LIST))
 
-<span class="c1"># Fungsi bantu untuk merubah output TSFEL menjadi skalar</span>
+# Fungsi bantu untuk merubah output TSFEL menjadi skalar
 
-<span class="k">def</span><span class="w"> </span><span class="nf">to_scalar</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;values&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
-        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
-    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+def to_scalar(result):
+    if isinstance(result, dict) and &#39;values&#39; in result:
+        result = result[&#39;values&#39;]
+    if isinstance(result, (list, tuple, np.ndarray)):
+        arr = np.asarray(result, dtype=float)
+        return float(np.nanmean(arr))
+    return float(result)
 
-<span class="c1"># Fungsi ekstraksi satu fitur</span>
+# Fungsi ekstraksi satu fitur
 
-<span class="k">def</span><span class="w"> </span><span class="nf">extract_one</span><span class="p">(</span><span class="n">fn_name</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tsfel_features</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">)</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
-    <span class="k">if</span> <span class="s1">&#39;fs&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">to_scalar</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+def extract_one(fn_name, signal, fs):
+    fn = getattr(tsfel_features, fn_name)
+    params = inspect.signature(fn).parameters
+    if &#39;fs&#39; in params:
+        result = fn(signal, fs)
+    else:
+        result = fn(signal)
+    return to_scalar(result)
 
-<span class="c1"># Ekstraksi fitur</span>
-<span class="n">row</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">fn_name</span> <span class="ow">in</span> <span class="n">FEATURE_LIST</span><span class="p">:</span>
-    <span class="n">row</span><span class="p">[</span><span class="n">fn_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">extract_one</span><span class="p">(</span><span class="n">fn_name</span><span class="p">,</span> <span class="n">signal_1d</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+# Ekstraksi fitur
+row = {}
+for fn_name in FEATURE_LIST:
+    row[fn_name] = extract_one(fn_name, signal_1d, fs)
 
-<span class="n">extracted_features_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">row</span><span class="p">])</span>
+extracted_features_final = pd.DataFrame([row])
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Berhasil mengekstrak </span><span class="si">{</span><span class="n">extracted_features_final</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> fitur dari data </span><span class="si">{</span><span class="n">target_pollutant</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+print(f&#39;Berhasil mengekstrak {extracted_features_final.shape[1]} fitur dari data {target_pollutant}&#39;)
 
-<span class="c1"># Simpan hasil ekstraksi</span>
-<span class="n">extracted_features_final</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;../file/NO2_Jogoroto_TSFEL.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+# Simpan hasil ekstraksi
+extracted_features_final.to_csv(&#39;../file/NO2_Jogoroto_TSFEL.csv&#39;, index=False)
 </pre></div>
 </div>
 </section>
@@ -633,51 +1066,8 @@ document.write(`
 </section>
 </section>
 <hr class="docutils" />
-<section id="pengelompokan-domain-fitur-tsfel">
-<h2>3. Pengelompokan Domain Fitur TSFEL<a class="headerlink" href="#pengelompokan-domain-fitur-tsfel" title="Link to this heading">#</a></h2>
-<p>Fitur yang dihasilkan oleh TSFEL dapat dikelompokkan menjadi tiga domain utama, yaitu:</p>
-<section id="a-domain-statistical-statistik">
-<h3>A. Domain Statistical (Statistik)<a class="headerlink" href="#a-domain-statistical-statistik" title="Link to this heading">#</a></h3>
-<p>Domain ini digunakan untuk melihat bentuk distribusi dan karakteristik numerik dari data tanpa memperhatikan urutan waktu. Fitur yang termasuk di dalamnya di antaranya:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">calc_mean</span></code>, <code class="docutils literal notranslate"><span class="pre">calc_median</span></code>, <code class="docutils literal notranslate"><span class="pre">calc_max</span></code>, <code class="docutils literal notranslate"><span class="pre">calc_min</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">calc_std</span></code>, <code class="docutils literal notranslate"><span class="pre">calc_var</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">skewness</span></code>, <code class="docutils literal notranslate"><span class="pre">kurtosis</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">interq_range</span></code>, <code class="docutils literal notranslate"><span class="pre">rms</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">hist_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">mean_abs_deviation</span></code>, <code class="docutils literal notranslate"><span class="pre">median_abs_deviation</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ecdf</span></code>, <code class="docutils literal notranslate"><span class="pre">ecdf_percentile</span></code>, <code class="docutils literal notranslate"><span class="pre">ecdf_slope</span></code>, <code class="docutils literal notranslate"><span class="pre">ecdf_percentile_count</span></code></p></li>
-</ul>
-</section>
-<section id="b-domain-temporal-waktu">
-<h3>B. Domain Temporal (Waktu)<a class="headerlink" href="#b-domain-temporal-waktu" title="Link to this heading">#</a></h3>
-<p>Domain ini menangkap dinamika perubahan data dari satu waktu ke waktu berikutnya. Beberapa fitur yang umum dipakai di antaranya:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">abs_energy</span></code>, <code class="docutils literal notranslate"><span class="pre">average_power</span></code>, <code class="docutils literal notranslate"><span class="pre">auc</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">autocorr</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>, <code class="docutils literal notranslate"><span class="pre">mse</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mean_diff</span></code>, <code class="docutils literal notranslate"><span class="pre">mean_abs_diff</span></code>, <code class="docutils literal notranslate"><span class="pre">median_diff</span></code>, <code class="docutils literal notranslate"><span class="pre">median_abs_diff</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sum_abs_diff</span></code>, <code class="docutils literal notranslate"><span class="pre">zero_cross</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">positive_turning</span></code>, <code class="docutils literal notranslate"><span class="pre">negative_turning</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">dfa</span></code>, <code class="docutils literal notranslate"><span class="pre">hurst_exponent</span></code>, <code class="docutils literal notranslate"><span class="pre">lempel_ziv</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">slope</span></code>, <code class="docutils literal notranslate"><span class="pre">pk_pk_distance</span></code></p></li>
-</ul>
-</section>
-<section id="c-domain-spectral-frekuensi">
-<h3>C. Domain Spectral (Frekuensi)<a class="headerlink" href="#c-domain-spectral-frekuensi" title="Link to this heading">#</a></h3>
-<p>Domain ini mengubah sinyal waktu menjadi representasi frekuensi agar pola periodik atau osilasi bisa terlihat. Fitur utama yang sering digunakan di antaranya:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">fundamental_frequency</span></code>, <code class="docutils literal notranslate"><span class="pre">max_frequency</span></code>, <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spectral_centroid</span></code>, <code class="docutils literal notranslate"><span class="pre">spectral_spread</span></code>, <code class="docutils literal notranslate"><span class="pre">spectral_slope</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spectral_entropy</span></code>, <code class="docutils literal notranslate"><span class="pre">spectral_kurtosis</span></code>, <code class="docutils literal notranslate"><span class="pre">spectral_skewness</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spectral_roll_off</span></code>, <code class="docutils literal notranslate"><span class="pre">spectral_roll_on</span></code>, <code class="docutils literal notranslate"><span class="pre">spectral_variation</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">max_power_spectrum</span></code>, <code class="docutils literal notranslate"><span class="pre">power_bandwidth</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">lpcc</span></code>, <code class="docutils literal notranslate"><span class="pre">mfcc</span></code>, <code class="docutils literal notranslate"><span class="pre">spectrogram_mean_coeff</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">wavelet_abs_mean</span></code>, <code class="docutils literal notranslate"><span class="pre">wavelet_energy</span></code>, <code class="docutils literal notranslate"><span class="pre">wavelet_entropy</span></code>, <code class="docutils literal notranslate"><span class="pre">wavelet_std</span></code>, <code class="docutils literal notranslate"><span class="pre">wavelet_var</span></code></p></li>
-</ul>
-</section>
-</section>
-<hr class="docutils" />
 <section id="penjelasan-singkat">
-<h2>4. Penjelasan Singkat<a class="headerlink" href="#penjelasan-singkat" title="Link to this heading">#</a></h2>
+<h2>5. Penjelasan Singkat<a class="headerlink" href="#penjelasan-singkat" title="Link to this heading">#</a></h2>
 <p>Proses preprocessing dan ekstraksi fitur ini sangat penting karena data mentah sering kali mengandung noise, missing value, dan outlier yang dapat mengganggu kualitas analisis. Dengan menangani semua ketidakrataan tersebut terlebih dahulu, fitur yang dihasilkan akan lebih representatif dan stabil untuk dipakai pada tahap berikutnya, seperti pemodelan prediksi, klasifikasi, atau analisis pola spasial-temporal.</p>
 <p>Pada konteks penelitian ini, penggunaan TSFEL memungkinkan ekstraksi fitur dari data NO2 wilayah Jogoroto secara otomatis dan konsisten. Total 68 fitur yang diperoleh mencakup karakteristik statistik, temporal, dan spektral sehingga dapat mendukung pengambilan keputusan berbasis data dengan lebih baik.</p>
 </section>
@@ -747,6 +1137,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Pra-Pemrosesan Data Kewilayahan Kecamatan Jogoroto dan Ekstraksi 68 Fitur TSFEL</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocessing-penanganan-outliers-dan-interpolasi-data">1. Preprocessing: Penanganan Outliers dan Interpolasi Data</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-dengan-metode-iqr">Deteksi Outlier dengan Metode IQR</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-outlier">Visualisasi Outlier</a></li>
@@ -754,19 +1145,24 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-setelah-cleaning-dan-interpolasi">Hasil Setelah Cleaning dan Interpolasi</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ekstraksi-68-fitur-dengan-tsfel">2. Ekstraksi 68 Fitur dengan TSFEL</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ekstraksi-68-fitur-dengan-tsfel">2. Ekstraksi 68 Fitur dengan TSFEL</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-tsfel-time-series-feature-extraction-library">68 Fitur TSFEL (Time Series Feature Extraction Library)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-statistik-21-fitur">1. Domain Statistik (21 fitur)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-temporal-15-fitur">2. Domain Temporal (15 fitur)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-spektral-26-fitur">3. Domain Spektral (26 fitur)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#domain-fraktal-6-fitur">4. Domain Fraktal (6 fitur)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sumber">Sumber</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-ekstraksi-fitur">Langkah Ekstraksi Fitur</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-ekstraksi-fitur">Hasil Ekstraksi Fitur</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengelompokan-domain-fitur-tsfel">3. Pengelompokan Domain Fitur TSFEL</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-domain-statistical-statistik">A. Domain Statistical (Statistik)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-domain-temporal-waktu">B. Domain Temporal (Waktu)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-domain-spectral-frekuensi">C. Domain Spectral (Frekuensi)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-singkat">5. Penjelasan Singkat</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-singkat">4. Penjelasan Singkat</a></li>
 </ul>
+
   </nav></div>
 
 </div></div>
