@@ -1,0 +1,687 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>K-Means Clustering &#8212; Proyek Sains Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=1ae7504c"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'bandung/clustering';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Pra-Pemrosesan Data Kewilayahan Kecamatan Bandung" href="prepocessing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Proyek Sains Data - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Proyek Sains Data - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Welcome to My Project Science Data
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../business/intro.html">Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_understanding/intro.html">Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_understanding/matrix.html">Dokumentasi: Migrasi Data Time Series Polutan ke Aiven PostgreSQL &amp; Analisis Statistik Deskriptif di KNIME</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_prepocessing/intro.html">Data Preprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_prepocessing/preprocessing.html">Pra-Pemrosesan Data Kewilayahan Kecamatan Jogoroto dan Ekstraksi 68 Fitur TSFEL</a></li>
+
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="intro.html">Polutan di Kecamatan Bandung - Kabupaten Jombang</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="bisnis.html">Business Understanding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="undestanding.html">Data Understanding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepocessing.html">Pra-Pemrosesan Data Kewilayahan Kecamatan Bandung</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">K-Means Clustering</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fbandung/clustering.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/bandung/clustering.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>K-Means Clustering</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pendahuluan">1. Pendahuluan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flow-workbench-clustering">2. Flow Workbench Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-input-dan-persiapan">3. Data Input dan Persiapan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-analysis-pca">4. Principal Component Analysis (PCA)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-pca">Visualisasi PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algoritma-k-means">5. Algoritma K-Means</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksperimen-clustering">6. Eksperimen Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variabel-yang-digunakan">6.1 Variabel yang Digunakan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-visual">6.2 Output Visual</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-hasil-clustering">7. Interpretasi Hasil Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">8. Kesimpulan</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="k-means-clustering">
+<h1>K-Means Clustering<a class="headerlink" href="#k-means-clustering" title="Link to this heading">#</a></h1>
+<section id="pendahuluan">
+<h2>1. Pendahuluan<a class="headerlink" href="#pendahuluan" title="Link to this heading">#</a></h2>
+<p>Setelah data polutan di Kecamatan Bandung dibersihkan dan fitur-fitur time series berhasil diekstraksi, tahap berikutnya adalah melakukan pengelompokan pola data menggunakan algoritma <strong>K-Means Clustering</strong>. Tujuan dari tahap ini adalah mengelompokkan periode waktu berdasarkan karakteristik konsentrasi polutan sehingga pola yang serupa dapat dikenali secara bersama-sama.</p>
+<p>Pada studi kasus ini, data yang diproses mencakup tiga variabel utama, yaitu:</p>
+<ul class="simple">
+<li><p>CO</p></li>
+<li><p>SO₂</p></li>
+<li><p>NO₂</p></li>
+</ul>
+<p>Dengan pendekatan clustering, kita dapat melihat apakah ada kelompok hari yang memiliki kondisi udara relatif serupa, misalnya periode dengan kadar polutan tinggi, sedang, atau rendah.</p>
+</section>
+<hr class="docutils" />
+<section id="flow-workbench-clustering">
+<h2>2. Flow Workbench Clustering<a class="headerlink" href="#flow-workbench-clustering" title="Link to this heading">#</a></h2>
+<p>Di tahap ini, workflow pengelompokan dilakukan dengan pendekatan visual menggunakan aplikasi KNIME. Diagram berikut menggambarkan alur utama proses clustering dari data mentah hingga visualisasi hasil:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>MySQL Connector
+      |
+      v
+DB Table Selector --&gt; DB Reader --&gt; Table View --&gt; PCA --&gt; K-Means --&gt; Scatter Plot
+                     \______________________________/
+                              (input data)
+</pre></div>
+</div>
+<p>Secara umum, alur kerja tersebut terdiri dari:</p>
+<ol class="arabic simple">
+<li><p><strong>MySQL Connector</strong> untuk mengambil data dari sumber.</p></li>
+<li><p><strong>DB Table Selector</strong> dan <strong>DB Reader</strong> untuk membaca tabel data.</p></li>
+<li><p><strong>Table View</strong> untuk melihat struktur data dan memastikan variabel sudah masuk dengan benar.</p></li>
+<li><p><strong>PCA</strong> untuk mereduksi dimensi fitur agar hasil clustering lebih stabil.</p></li>
+<li><p><strong>K-Means</strong> untuk membagi data ke dalam beberapa klaster.</p></li>
+<li><p><strong>Scatter Plot</strong> untuk memvisualisasikan hasil pengelompokan secara dua dimensi.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="data-input-dan-persiapan">
+<h2>3. Data Input dan Persiapan<a class="headerlink" href="#data-input-dan-persiapan" title="Link to this heading">#</a></h2>
+<p>Data yang digunakan adalah hasil preprocessing dan ekstraksi fitur dari deret waktu polutan di Kecamatan Bandung. Pada tahap ini, data tidak langsung digunakan untuk clustering tanpa persiapan. Ada beberapa langkah yang perlu dilakukan, di antaranya:</p>
+<ul class="simple">
+<li><p>memastikan tidak ada nilai missing setelah preprocessing,</p></li>
+<li><p>memastikan format tanggal dan variabel sudah konsisten,</p></li>
+<li><p>memilih fitur yang relevan untuk clustering,</p></li>
+<li><p>memeriksa distribusi data untuk menghindari dominasi variabel tertentu.</p></li>
+</ul>
+<p>Karena dataset memiliki banyak fitur, pembobotan antar variabel bisa sangat berpengaruh pada hasil clustering. Oleh karena itu, sering digunakan <strong>PCA (Principal Component Analysis)</strong> untuk mereduksi dimensi dan menjaga struktur data tetap eksploratif namun lebih ringkas.</p>
+</section>
+<hr class="docutils" />
+<section id="principal-component-analysis-pca">
+<h2>4. Principal Component Analysis (PCA)<a class="headerlink" href="#principal-component-analysis-pca" title="Link to this heading">#</a></h2>
+<p>Pada tahap ini, data yang telah diekstraksi fitur diproses dengan metode <strong>PCA</strong> untuk mereduksi dimensi dari struktur data yang awalnya lebih kompleks menjadi representasi yang lebih sederhana. Dalam eksperimen yang digunakan pada studi ini, data awal memiliki <strong>68 fitur</strong>, kemudian dilakukan pemilihan terhadap <strong>15 fitur utama</strong> yang dianggap paling representatif. Setelah proses tersebut, data yang dipertahankan menjadi <strong>53 fitur</strong> yang masih tersisa untuk analisis lanjutan. Tujuan utamanya adalah mempertahankan informasi utama sekaligus mengurangi redundansi antar variabel agar proses clustering menjadi lebih stabil dan lebih mudah diinterpretasikan.</p>
+<p>Manfaat PCA dalam pipeline ini adalah:</p>
+<ul class="simple">
+<li><p>mempermudah visualisasi data,</p></li>
+<li><p>mengurangi redundansi antar fitur,</p></li>
+<li><p>meningkatkan kestabilan proses clustering,</p></li>
+<li><p>membantu melihat pola kelompok yang lebih jelas.</p></li>
+</ul>
+<p>Setelah proses seleksi dan reduksi dari 68 fitur menjadi 53 fitur yang terpilih, data siap diproses lebih lanjut menggunakan algoritma K-Means dengan jumlah klaster yang ditentukan secara eksplisit.</p>
+<section id="visualisasi-pca">
+<h3>Visualisasi PCA<a class="headerlink" href="#visualisasi-pca" title="Link to this heading">#</a></h3>
+<p>Proses reduksi dimensi ini divisualisasikan pada gambar berikut, di mana 68 fitur awal direduksi 15 fitur sehingga menghasilkan 53 fitur yang masih terjaga representasinya dalam analisis clustering.</p>
+<p><img alt="Visualisasi PCA reduksi 15 fitur" src="../_images/PCA.png" /></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="algoritma-k-means">
+<h2>5. Algoritma K-Means<a class="headerlink" href="#algoritma-k-means" title="Link to this heading">#</a></h2>
+<p>Setelah data diproses melalui PCA dengan basis seleksi 15 fitur utama dari total <strong>68 fitur</strong>, maka data yang dipertahankan menjadi <strong>53 fitur</strong>. Tahap berikutnya adalah pengelompokan dengan algoritma <strong>K-Means</strong>. Pada eksperimen ini, jumlah klaster yang digunakan adalah <strong>3 cluster</strong>. Pemilihan 3 cluster didasari pada kebutuhan untuk membagi pola data menjadi tiga kelompok utama yang representatif terhadap karakteristik kualitas udara di wilayah Kecamatan Bandung.</p>
+<p>K-Means merupakan algoritma clustering berbasis centroid, yaitu membagi data menjadi beberapa kelompok berdasarkan kedekatan dengan pusat klaster. Prosesnya berlangsung iteratif:</p>
+<ol class="arabic simple">
+<li><p>Menentukan jumlah klaster awal.</p></li>
+<li><p>Mengambil centroid awal secara acak atau berbasis sebaran data.</p></li>
+<li><p>Menghitung jarak tiap data ke tiap centroid.</p></li>
+<li><p>Mengelompokkan data ke centroid terdekat.</p></li>
+<li><p>Mengupdate centroid baru berdasarkan rata-rata data di setiap klaster.</p></li>
+<li><p>Mengulangi sampai centroid stabil atau iterasi berhenti.</p></li>
+</ol>
+<p>Secara matematis, K-Means meminimalkan fungsi objektif berikut:</p>
+<div class="math notranslate nohighlight">
+\[
+J = \sum_{k=1}^{K} \sum_{x_i \in C_k} \|x_i - \mu_k\|^2
+\]</div>
+<p>di mana:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(K\)</span> = jumlah klaster,</p></li>
+<li><p><span class="math notranslate nohighlight">\(C_k\)</span> = klaster ke-k,</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_i\)</span> = data ke-i,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_k\)</span> = centroid klaster ke-k.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="eksperimen-clustering">
+<h2>6. Eksperimen Clustering<a class="headerlink" href="#eksperimen-clustering" title="Link to this heading">#</a></h2>
+<p>Pada tahap eksperimen, beberapa skenario clustering dapat dibandingkan, terutama:</p>
+<ul class="simple">
+<li><p>clustering pada data fitur asli,</p></li>
+<li><p>clustering pada data hasil reduksi PCA,</p></li>
+<li><p>variasi jumlah klaster yang dievaluasi.</p></li>
+</ul>
+<p>Tujuannya adalah menemukan konfigurasi yang paling representatif dalam membedakan pola kualitas udara di wilayah Kecamatan Bandung. Dalam konteks ini, klaster yang terbentuk merepresentasikan periode-periode dengan kemiripan karakteristik polutan.</p>
+<section id="variabel-yang-digunakan">
+<h3>6.1 Variabel yang Digunakan<a class="headerlink" href="#variabel-yang-digunakan" title="Link to this heading">#</a></h3>
+<p>Fitur yang digunakan umumnya berasal dari hasil preprocessing dan ekstraksi fitur time series, seperti:</p>
+<ul class="simple">
+<li><p>rata-rata konsentrasi,</p></li>
+<li><p>variasi antar waktu,</p></li>
+<li><p>skewness,</p></li>
+<li><p>kurtosis,</p></li>
+<li><p>nilai amplitudo dan perubahan temporal,</p></li>
+<li><p>karakteristik spektral dari seri data.</p></li>
+</ul>
+</section>
+<section id="output-visual">
+<h3>6.2 Output Visual<a class="headerlink" href="#output-visual" title="Link to this heading">#</a></h3>
+<p>Pada tahap ini, hasil clustering ditampilkan berdasarkan konfigurasi yang benar-benar digunakan dalam eksperimen, yaitu:</p>
+<ul class="simple">
+<li><p><strong>PCA</strong>: target dimensi diatur pada <strong>53</strong> fitur,</p></li>
+<li><p><strong>K-Means</strong>: jumlah klaster yang digunakan adalah <strong>3 cluster</strong>.
+<img alt="Hasil K-Means pada PCA 68 fitur -&gt; 15 fitur utama -&gt; 53 fitur -&gt; 3 cluster" src="../_images/kmeans_pca.png" /></p></li>
+</ul>
+<p>Gambar di atas menunjukkan konfigurasi utama proses clustering, di mana fitur diproses terlebih dahulu melalui PCA lalu dilanjutkan ke langkah K-Means. Dengan demikian, visualisasi tersebut bukan sekadar pembanding, melainkan bentuk implementasi final yang sesuai dengan rancangan analisis pada penelitian ini.</p>
+<p><img alt="Hasil K-Means pada PCA 68 fitur -&gt; 15 fitur utama -&gt; 53 fitur -&gt; 3 cluster" src="../_images/cluster_bandung_pca_3.png" /></p>
+<p>Visualisasi ini memberi gambaran bahwa data dengan karakteristik serupa akan cenderung bergerombol dalam ruang fitur yang sama, sementara data dengan pola berbeda akan terpisah ke wilayah lain. Pada kondisi ini, tiga klaster yang terbentuk merepresentasikan tingkat kemiripan pola kualitas udara di Kecamatan Bandung berdasarkan data yang telah diproses dan dikelompokkan sesuai konfigurasi di atas.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="interpretasi-hasil-clustering">
+<h2>7. Interpretasi Hasil Clustering<a class="headerlink" href="#interpretasi-hasil-clustering" title="Link to this heading">#</a></h2>
+<p>Hasil clustering dapat diinterpretasikan sebagai pola temporal kualitas udara di Kecamatan Bandung yang terbagi ke dalam beberapa kelompok. Misalnya:</p>
+<ul class="simple">
+<li><p>Klaster 1: periode dengan konsentrasi polutan cenderung lebih rendah.</p></li>
+<li><p>Klaster 2: periode dengan konsentrasi moderat dan fluktuatif.</p></li>
+<li><p>Klaster 3: periode dengan konsentrasi tinggi dan berpotensi memengaruhi kesehatan masyarakat.</p></li>
+</ul>
+<p>Dengan demikian, clustering bukan hanya sekadar mengelompokkan data, tetapi juga membantu mengidentifikasi periode kritis dan pola yang berulang dalam kualitas udara.</p>
+</section>
+<hr class="docutils" />
+<section id="kesimpulan">
+<h2>8. Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
+<p>Tahap K-Means Clustering menjadi bagian penting dalam analisis data polutan karena memungkinkan kita mengelompokkan hari-hari berdasarkan karakteristik kualitas udara secara otomatis. Kombinasi antara PCA dan K-Means memberikan pendekatan yang lebih efektif dalam memahami pola data yang kompleks.</p>
+<p>Pada wilayah Kecamatan Bandung, hasil clustering diharapkan dapat membantu pemangku kepentingan melihat kondisi emisi udara secara lebih terstruktur, sehingga dapat dijadikan dasar pertimbangan dalam pengambilan keputusan lingkungan.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./bandung"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="prepocessing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Pra-Pemrosesan Data Kewilayahan Kecamatan Bandung</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pendahuluan">1. Pendahuluan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flow-workbench-clustering">2. Flow Workbench Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-input-dan-persiapan">3. Data Input dan Persiapan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#principal-component-analysis-pca">4. Principal Component Analysis (PCA)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-pca">Visualisasi PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algoritma-k-means">5. Algoritma K-Means</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksperimen-clustering">6. Eksperimen Clustering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variabel-yang-digunakan">6.1 Variabel yang Digunakan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#output-visual">6.2 Output Visual</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-hasil-clustering">7. Interpretasi Hasil Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">8. Kesimpulan</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

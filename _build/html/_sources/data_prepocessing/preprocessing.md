@@ -81,7 +81,7 @@ plt.show()
 
 Setelah outlier ditemukan, nilai tersebut diubah menjadi `NaN`. Kemudian dilakukan interpolasi linier untuk mengisi data yang hilang. Untuk bagian awal dan akhir rangkaian yang tidak dapat diinterpolasi, digunakan teknik `bfill()` dan `ffill()` agar seluruh data tetap utuh.
 
-```python
+```{code-cell}
 # Tandai outlier menjadi NaN
 # df['NO2_cleaned'] = df['NO2'].mask((df['NO2'] < lower_bound) | (df['NO2'] > upper_bound))
 
@@ -110,8 +110,6 @@ Berikut adalah contoh visualisasi data sebelum dan sesudah proses cleaning serta
 ![Imput](../img/imput.png)
 
 ```{code-cell}
-# Contoh penerapan lengkap
-
 df = pd.read_csv("../file/NO2_Jogoroto_final.csv")
 df['date'] = pd.to_datetime(df['date'])
 df = df.sort_values('date').reset_index(drop=True)
@@ -267,7 +265,7 @@ Daftar dan klasifikasi domain fitur disusun berdasarkan dokumentasi resmi TSFEL 
 
 ### Langkah Ekstraksi Fitur
 
-```code-cell
+```{code-cell}
 import pandas as pd
 import numpy as np
 import inspect

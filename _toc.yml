@@ -9,5 +9,9 @@ chapters:
 - file: data_understanding/matrix
 - file: data_prepocessing/intro
 - file: data_prepocessing/preprocessing
-- file: markdown
-- file: markdown-notebooks
+- file: bandung/intro
+  sections:
+  - file: bandung/bisnis
+  - file: bandung/undestanding
+  - file: bandung/prepocessing
+  - file: bandung/clustering

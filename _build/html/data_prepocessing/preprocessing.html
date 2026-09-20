@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'data_prepocessing/preprocessing';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Markdown Files" href="../markdown.html" />
+    <link rel="next" title="Polutan di Kecamatan Bandung - Kabupaten Jombang" href="../bandung/intro.html" />
     <link rel="prev" title="Data Preprocessing" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -188,8 +188,13 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Data Preprocessing</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Pra-Pemrosesan Data Kewilayahan Kecamatan Jogoroto dan Ekstraksi 68 Fitur TSFEL</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="../markdown.html">Markdown Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../bandung/intro.html">Polutan di Kecamatan Bandung - Kabupaten Jombang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../bandung/bisnis.html">Business Understanding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bandung/undestanding.html">Data Understanding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bandung/prepocessing.html">Pra-Pemrosesan Data Kewilayahan Kecamatan Bandung</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bandung/clustering.html">K-Means Clustering</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -494,6 +499,8 @@ document.write(`
 <section id="penanganan-outlier-dan-interpolasi-data">
 <h3>Penanganan Outlier dan Interpolasi Data<a class="headerlink" href="#penanganan-outlier-dan-interpolasi-data" title="Link to this heading">#</a></h3>
 <p>Setelah outlier ditemukan, nilai tersebut diubah menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code>. Kemudian dilakukan interpolasi linier untuk mengisi data yang hilang. Untuk bagian awal dan akhir rangkaian yang tidak dapat diinterpolasi, digunakan teknik <code class="docutils literal notranslate"><span class="pre">bfill()</span></code> dan <code class="docutils literal notranslate"><span class="pre">ffill()</span></code> agar seluruh data tetap utuh.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tandai outlier menjadi NaN</span>
 <span class="c1"># df[&#39;NO2_cleaned&#39;] = df[&#39;NO2&#39;].mask((df[&#39;NO2&#39;] &lt; lower_bound) | (df[&#39;NO2&#39;] &gt; upper_bound))</span>
 
@@ -509,6 +516,8 @@ document.write(`
 <span class="c1"># df_no2_jogoroto.to_csv(&quot;../file/NO2_Jogoroto_filled.csv&quot;, index=False)</span>
 </pre></div>
 </div>
+</div>
+</div>
 </section>
 <section id="hasil-setelah-cleaning-dan-interpolasi">
 <h3>Hasil Setelah Cleaning dan Interpolasi<a class="headerlink" href="#hasil-setelah-cleaning-dan-interpolasi" title="Link to this heading">#</a></h3>
@@ -519,9 +528,7 @@ document.write(`
 <p><img alt="Imput" src="../_images/imput.png" /></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Contoh penerapan lengkap</span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../file/NO2_Jogoroto_final.csv&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../file/NO2_Jogoroto_final.csv&quot;</span><span class="p">)</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -983,77 +990,81 @@ document.write(`
 </section>
 <section id="langkah-ekstraksi-fitur">
 <h3>Langkah Ekstraksi Fitur<a class="headerlink" href="#langkah-ekstraksi-fitur" title="Link to this heading">#</a></h3>
-<div class="highlight-code-cell notranslate"><div class="highlight"><pre><span></span>import pandas as pd
-import numpy as np
-import inspect
-import tsfel.feature_extraction.features as tsfel_features
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tsfel.feature_extraction.features</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tsfel_features</span>
 
-# Muat data hasil preprocessing
+<span class="c1"># Muat data hasil preprocessing</span>
 
-df = pd.read_csv(&#39;../file/NO2_Jogoroto_filled.csv&#39;)
-df[&#39;date&#39;] = pd.to_datetime(df[&#39;date&#39;])
-df = df.sort_values(&#39;date&#39;).reset_index(drop=True)
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../file/NO2_Jogoroto_filled.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-# Target kolom
+<span class="c1"># Target kolom</span>
 
-target_pollutant = &#39;NO2&#39;
+<span class="n">target_pollutant</span> <span class="o">=</span> <span class="s1">&#39;NO2&#39;</span>
 
-df[target_pollutant] = pd.to_numeric(df[target_pollutant], errors=&#39;coerce&#39;)
+<span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
 
-# Tetap pastikan data bersih dan urut berdasarkan waktu
+<span class="c1"># Tetap pastikan data bersih dan urut berdasarkan waktu</span>
 
-df_clean = df.set_index(&#39;date&#39;).interpolate(method=&#39;time&#39;).ffill().bfill()
-fs = 1
-signal_1d = df_clean[target_pollutant].astype(float).values
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span><span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">signal_1d</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
 
-# 68 fitur TSFEL
-FEATURE_LIST = &quot;&quot;&quot;abs_energy auc autocorr average_power calc_centroid calc_max calc_mean
-calc_median calc_min calc_std calc_var dfa distance ecdf ecdf_percentile ecdf_percentile_count
-ecdf_slope entropy fundamental_frequency higuchi_fractal_dimension hist_mode human_range_energy
-hurst_exponent interq_range kurtosis lempel_ziv lpcc max_frequency max_power_spectrum
-maximum_fractal_length mean_abs_deviation mean_abs_diff mean_diff median_abs_deviation
-median_abs_diff median_diff median_frequency mfcc mse negative_turning neighbourhood_peaks
-petrosian_fractal_dimension pk_pk_distance positive_turning power_bandwidth rms skewness slope
-spectral_centroid spectral_decrease spectral_distance spectral_entropy spectral_kurtosis
-spectral_positive_turning spectral_roll_off spectral_roll_on spectral_skewness spectral_slope
-spectral_spread spectral_variation spectrogram_mean_coeff sum_abs_diff wavelet_abs_mean
-wavelet_energy wavelet_entropy wavelet_std wavelet_var zero_cross&quot;&quot;&quot;.split()
+<span class="c1"># 68 fitur TSFEL</span>
+<span class="n">FEATURE_LIST</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;abs_energy auc autocorr average_power calc_centroid calc_max calc_mean</span>
+<span class="s2">calc_median calc_min calc_std calc_var dfa distance ecdf ecdf_percentile ecdf_percentile_count</span>
+<span class="s2">ecdf_slope entropy fundamental_frequency higuchi_fractal_dimension hist_mode human_range_energy</span>
+<span class="s2">hurst_exponent interq_range kurtosis lempel_ziv lpcc max_frequency max_power_spectrum</span>
+<span class="s2">maximum_fractal_length mean_abs_deviation mean_abs_diff mean_diff median_abs_deviation</span>
+<span class="s2">median_abs_diff median_diff median_frequency mfcc mse negative_turning neighbourhood_peaks</span>
+<span class="s2">petrosian_fractal_dimension pk_pk_distance positive_turning power_bandwidth rms skewness slope</span>
+<span class="s2">spectral_centroid spectral_decrease spectral_distance spectral_entropy spectral_kurtosis</span>
+<span class="s2">spectral_positive_turning spectral_roll_off spectral_roll_on spectral_skewness spectral_slope</span>
+<span class="s2">spectral_spread spectral_variation spectrogram_mean_coeff sum_abs_diff wavelet_abs_mean</span>
+<span class="s2">wavelet_energy wavelet_entropy wavelet_std wavelet_var zero_cross&quot;&quot;&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 
-print(&#39;Jumlah fitur yang diproses:&#39;, len(FEATURE_LIST))
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Jumlah fitur yang diproses:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">FEATURE_LIST</span><span class="p">))</span>
 
-# Fungsi bantu untuk merubah output TSFEL menjadi skalar
+<span class="c1"># Fungsi bantu untuk merubah output TSFEL menjadi skalar</span>
 
-def to_scalar(result):
-    if isinstance(result, dict) and &#39;values&#39; in result:
-        result = result[&#39;values&#39;]
-    if isinstance(result, (list, tuple, np.ndarray)):
-        arr = np.asarray(result, dtype=float)
-        return float(np.nanmean(arr))
-    return float(result)
+<span class="k">def</span><span class="w"> </span><span class="nf">to_scalar</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;values&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-# Fungsi ekstraksi satu fitur
+<span class="c1"># Fungsi ekstraksi satu fitur</span>
 
-def extract_one(fn_name, signal, fs):
-    fn = getattr(tsfel_features, fn_name)
-    params = inspect.signature(fn).parameters
-    if &#39;fs&#39; in params:
-        result = fn(signal, fs)
-    else:
-        result = fn(signal)
-    return to_scalar(result)
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_one</span><span class="p">(</span><span class="n">fn_name</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tsfel_features</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+    <span class="k">if</span> <span class="s1">&#39;fs&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">to_scalar</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-# Ekstraksi fitur
-row = {}
-for fn_name in FEATURE_LIST:
-    row[fn_name] = extract_one(fn_name, signal_1d, fs)
+<span class="c1"># Ekstraksi fitur</span>
+<span class="n">row</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">fn_name</span> <span class="ow">in</span> <span class="n">FEATURE_LIST</span><span class="p">:</span>
+    <span class="n">row</span><span class="p">[</span><span class="n">fn_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">extract_one</span><span class="p">(</span><span class="n">fn_name</span><span class="p">,</span> <span class="n">signal_1d</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
 
-extracted_features_final = pd.DataFrame([row])
+<span class="n">extracted_features_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">row</span><span class="p">])</span>
 
-print(f&#39;Berhasil mengekstrak {extracted_features_final.shape[1]} fitur dari data {target_pollutant}&#39;)
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Berhasil mengekstrak </span><span class="si">{</span><span class="n">extracted_features_final</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> fitur dari data </span><span class="si">{</span><span class="n">target_pollutant</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-# Simpan hasil ekstraksi
-extracted_features_final.to_csv(&#39;../file/NO2_Jogoroto_TSFEL.csv&#39;, index=False)
+<span class="c1"># Simpan hasil ekstraksi</span>
+<span class="n">extracted_features_final</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;../file/NO2_Jogoroto_TSFEL.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="hasil-ekstraksi-fitur">
@@ -1113,11 +1124,11 @@ extracted_features_final.to_csv(&#39;../file/NO2_Jogoroto_TSFEL.csv&#39;, index=
       </div>
     </a>
     <a class="right-next"
-       href="../markdown.html"
+       href="../bandung/intro.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Markdown Files</p>
+        <p class="prev-next-title">Polutan di Kecamatan Bandung - Kabupaten Jombang</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
