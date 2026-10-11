@@ -341,3 +341,6 @@ if os.path.exists(FILE_RASTER):
 
 m_full
 ```
+## Deployment
+
+Model dan hasil visualisasi tutupan lahan telah disajikan melalui aplikasi berbasis web menggunakan Streamlit. Aplikasi ini memungkinkan pengguna melihat hasil klasifikasi secara interaktif melalui browser tanpa menjalankan notebook secara lokal.[https://landuse-landcover-jatim-sp2.streamlit.app/](https://landuse-landcover-jatim-sp2.streamlit.app/)

@@ -9,3 +9,4 @@ scikit-learn==1.8.0   # harus sama dengan versi saat melatih model (rf_lulc.jobl
 rasterio
 folium
 seaborn
+geopandas
