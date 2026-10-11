@@ -39,6 +39,11 @@ jobs:
           pip install scipy
           pip install scikit-learn
           pip install matplotlib
+          pip install geopandas
+          pip install seaborn
+          pip install folium
+          pip install rasterio
+          pip install streamlit
       - name: Build HTML Assets
         run: jupyter-book build .
       - name: Upload artifact
