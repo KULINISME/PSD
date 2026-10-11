@@ -15,3 +15,12 @@ chapters:
   - file: bandung/undestanding
   - file: bandung/prepocessing
   - file: bandung/clustering
+- file: daratan/home
+  sections:
+  - file: daratan/bisnis
+  - file: daratan/understanding
+  - file: daratan/modelling
+  - file: daratan/visualisation
+
+
+  

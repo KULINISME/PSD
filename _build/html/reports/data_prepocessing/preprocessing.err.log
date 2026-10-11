@@ -1,0 +1,114 @@
+Traceback (most recent call last):
+  File "C:\Users\NEC VH-3\AppData\Local\Programs\Python\Python313\Lib\site-packages\jupyter_cache\executors\utils.py", line 58, in single_nb_execution
+    executenb(
+    ~~~~~~~~~^
+        nb,
+        ^^^
+    ...<4 lines>...
+        **kwargs,
+        ^^^^^^^^^
+    )
+    ^
+  File "C:\Users\NEC VH-3\AppData\Local\Programs\Python\Python313\Lib\site-packages\nbclient\client.py", line 1323, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\NEC VH-3\AppData\Local\Programs\Python\Python313\Lib\site-packages\jupyter_core\utils\__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\NEC VH-3\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\NEC VH-3\AppData\Local\Programs\Python\Python313\Lib\site-packages\nbclient\client.py", line 709, in async_execute
+    await self.async_execute_cell(
+        cell, index, execution_count=self.code_cells_executed + 1
+    )
+  File "C:\Users\NEC VH-3\AppData\Local\Programs\Python\Python313\Lib\site-packages\nbclient\client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\NEC VH-3\AppData\Local\Programs\Python\Python313\Lib\site-packages\nbclient\client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import pandas as pd
+import numpy as np
+import inspect
+import tsfel.feature_extraction.features as tsfel_features
+
+# Muat data hasil preprocessing
+
+df = pd.read_csv('../file/NO2_Jogoroto_filled.csv')
+df['date'] = pd.to_datetime(df['date'])
+df = df.sort_values('date').reset_index(drop=True)
+
+# Target kolom
+
+target_pollutant = 'NO2'
+
+df[target_pollutant] = pd.to_numeric(df[target_pollutant], errors='coerce')
+
+# Tetap pastikan data bersih dan urut berdasarkan waktu
+
+df_clean = df.set_index('date').interpolate(method='time').ffill().bfill()
+fs = 1
+signal_1d = df_clean[target_pollutant].astype(float).values
+
+# 68 fitur TSFEL
+FEATURE_LIST = """abs_energy auc autocorr average_power calc_centroid calc_max calc_mean
+calc_median calc_min calc_std calc_var dfa distance ecdf ecdf_percentile ecdf_percentile_count
+ecdf_slope entropy fundamental_frequency higuchi_fractal_dimension hist_mode human_range_energy
+hurst_exponent interq_range kurtosis lempel_ziv lpcc max_frequency max_power_spectrum
+maximum_fractal_length mean_abs_deviation mean_abs_diff mean_diff median_abs_deviation
+median_abs_diff median_diff median_frequency mfcc mse negative_turning neighbourhood_peaks
+petrosian_fractal_dimension pk_pk_distance positive_turning power_bandwidth rms skewness slope
+spectral_centroid spectral_decrease spectral_distance spectral_entropy spectral_kurtosis
+spectral_positive_turning spectral_roll_off spectral_roll_on spectral_skewness spectral_slope
+spectral_spread spectral_variation spectrogram_mean_coeff sum_abs_diff wavelet_abs_mean
+wavelet_energy wavelet_entropy wavelet_std wavelet_var zero_cross""".split()
+
+print('Jumlah fitur yang diproses:', len(FEATURE_LIST))
+
+# Fungsi bantu untuk merubah output TSFEL menjadi skalar
+
+def to_scalar(result):
+    if isinstance(result, dict) and 'values' in result:
+        result = result['values']
+    if isinstance(result, (list, tuple, np.ndarray)):
+        arr = np.asarray(result, dtype=float)
+        return float(np.nanmean(arr))
+    return float(result)
+
+# Fungsi ekstraksi satu fitur
+
+def extract_one(fn_name, signal, fs):
+    fn = getattr(tsfel_features, fn_name)
+    params = inspect.signature(fn).parameters
+    if 'fs' in params:
+        result = fn(signal, fs)
+    else:
+        result = fn(signal)
+    return to_scalar(result)
+
+# Ekstraksi fitur
+row = {}
+for fn_name in FEATURE_LIST:
+    row[fn_name] = extract_one(fn_name, signal_1d, fs)
+
+extracted_features_final = pd.DataFrame([row])
+
+print(f'Berhasil mengekstrak {extracted_features_final.shape[1]} fitur dari data {target_pollutant}')
+
+# Simpan hasil ekstraksi
+extracted_features_final.to_csv('../file/NO2_Jogoroto_TSFEL.csv', index=False)
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mModuleNotFoundError[39m                       Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[5][39m[32m, line 4[39m
+[32m      2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
+[32m      3[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01minspect[39;00m
+[32m----> [39m[32m4[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mtsfel[39;00m[34;01m.[39;00m[34;01mfeature_extraction[39;00m[34;01m.[39;00m[34;01mfeatures[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mtsfel_features[39;00m
+[32m      6[39m [38;5;66;03m# Muat data hasil preprocessing[39;00m
+[32m      8[39m df = pd.read_csv([33m'[39m[33m../file/NO2_Jogoroto_filled.csv[39m[33m'[39m)
+
+[31mModuleNotFoundError[39m: No module named 'tsfel'
+

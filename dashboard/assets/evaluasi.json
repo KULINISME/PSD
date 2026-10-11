@@ -1,0 +1,33 @@
+{
+  "n_poligon": 287,
+  "n_piksel_total": 536153,
+  "n_piksel_evaluasi": 22129,
+  "poligon_per_kelas": {
+    "Bangunan": 50,
+    "Danau": 50,
+    "Hutan": 37,
+    "Laut": 50,
+    "Mangrove": 50,
+    "Sawah": 50
+  },
+  "models": {
+    "knn": {
+      "nama": "KNN (k=5)",
+      "akurasi_piksel": 0.7085,
+      "kappa": 0.6495,
+      "f1_macro": 0.6971,
+      "n_poligon_benar": 244,
+      "akurasi_poligon": 0.8502,
+      "akurasi_split_acak": 0.7989
+    },
+    "nb": {
+      "nama": "Naive Bayes (Gaussian)",
+      "akurasi_piksel": 0.6512,
+      "kappa": 0.5809,
+      "f1_macro": 0.6286,
+      "n_poligon_benar": 207,
+      "akurasi_poligon": 0.7213,
+      "akurasi_split_acak": 0.6602
+    }
+  }
+}

@@ -1,0 +1,13 @@
+model,kelas,luas_km2_mentah,luas_km2,luas_ha,persen
+KNN (k=5),Sawah,12761.771,12761.771,1276177.1,12.708
+KNN (k=5),Bangunan,14786.789,14786.789,1478678.9,14.725
+KNN (k=5),Hutan,23808.08,23808.08,2380808.0,23.708
+KNN (k=5),Danau,9665.972,1419.63,141963.0,1.414
+KNN (k=5),Laut,35732.875,43979.217,4397921.7,43.795
+KNN (k=5),Mangrove,3664.782,3664.782,366478.2,3.649
+Naive Bayes (Gaussian),Sawah,8916.964,8916.964,891696.4,8.88
+Naive Bayes (Gaussian),Bangunan,9229.684,9229.684,922968.4,9.191
+Naive Bayes (Gaussian),Hutan,21561.325,21561.325,2156132.5,21.471
+Naive Bayes (Gaussian),Danau,17941.275,325.587,32558.7,0.324
+Naive Bayes (Gaussian),Laut,27145.292,44760.98,4476098.0,44.574
+Naive Bayes (Gaussian),Mangrove,15625.729,15625.729,1562572.9,15.56
